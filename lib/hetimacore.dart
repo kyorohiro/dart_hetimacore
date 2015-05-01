@@ -9,7 +9,6 @@ part 'src/lo/byteorder.dart';
 part 'src/lo/easyparser.dart';
 part 'src/lo/arraybuilder.dart';
 part 'src/util/percentencode.dart';
-part 'src/lo/hetimafile.dart';
 part 'src/test/hetitest.dart';
 part 'src/lo/hetimabuilder.dart';
 part 'src/util/hetibencode.dart';

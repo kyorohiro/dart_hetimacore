@@ -2,7 +2,6 @@ part of hetimacore;
 
 class ArrayBuilder extends HetimaBuilder {
   int _max = 1024;
-//  data.Uint8List _buffer8;
   List<int> _buffer8;
   int _length = 0;
 
