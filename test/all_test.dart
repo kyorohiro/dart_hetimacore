@@ -5,17 +5,13 @@ library dart_hetimacore.test;
 
 import 'package:unittest/unittest.dart';
 import 'package:hetimacore/hetimacore.dart';
-
+import 'test_hetimacore_00.dart' as core00;
 main() {
   group('A group of tests', () {
-    Awesome awesome;
-
     setUp(() {
-      awesome = new Awesome();
     });
-
     test('First Test', () {
-      expect(awesome.isAwesome, isTrue);
+      core00.script00();
     });
   });
 }
