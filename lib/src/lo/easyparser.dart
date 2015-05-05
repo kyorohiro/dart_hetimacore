@@ -80,59 +80,6 @@ class EasyParser {
     return completer.future;
   }
 
-  
-  async.Future<String> regexOR(List<int> a, List<int> b) {
-    return null;
-  }
-  
-  async.Future<String> regexConnect(List<int> a, List<int> b) {
-    return null;
-  }
-
-  async.Future<String> regexRepeat(List<int> a) {
-    return null;
-  }
-  //
-  // .*<value>
-  async.Future<String> nextStringByEnd(String value) {
-    async.Completer completer = new async.Completer();
-    List<int> encoded = convert.UTF8.encode(value);
-
-    int next = 0;
-    a() {
-      //print("a${next} ");
-      push();
-      buffer.getByteFuture(index+next, encoded.length)
-      .then((List<int> v) {
-        back();
-        pop();
-        if (v.length != encoded.length) {
-          completer.completeError(new EasyParseError());
-          return null;
-        }
-        int i = 0;
-        for (int e in encoded) {
-          if (e != v[i]) {
-            next++;
-            return a();
-          }
-        }
-        //
-        // index から next までが、欲しいデータ
-        return buffer.getByteFuture(index, next).then((List<int> v) {
-          index+=next;
-          completer.complete(convert.UTF8.decode(v));
-        });
-      }).catchError((e){
-        back();
-        pop();
-      });
-    }
-    ;
-    a();
-    return completer.future;
-  }
-
   async.Future<int> nextBytePattern(EasyParserMatcher matcher) {
     async.Completer completer = new async.Completer();
     matcher.init();
