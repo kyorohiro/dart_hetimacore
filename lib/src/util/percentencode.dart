@@ -17,7 +17,7 @@ class PercentEncode
    };
 
   static PercentEncode _sencoder = new PercentEncode();
-  static data.Uint8List decode (String message) {
+  static List<int> decode (String message) {
     return _sencoder.decodeWork(message);
   }
 
@@ -25,7 +25,7 @@ class PercentEncode
     return _sencoder.encodeWork(target);
   }
 
-  data.Uint8List decodeWork(String message) {
+  List<int> decodeWork(String message) {
     builder.clear();
     List<int> target = convert.UTF8.encode(message);
     int count = target.length;
@@ -39,7 +39,7 @@ class PercentEncode
         builder.appendString(message[i]);
       }
     }
-    return builder.toUint8List();
+    return builder.toList();
   }
 
   String encodeWork(List<int> target) {
