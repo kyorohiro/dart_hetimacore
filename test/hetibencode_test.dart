@@ -6,11 +6,9 @@ import 'dart:convert' as convert;
 void main() {
 
   hetima.HetiTest test = new hetima.HetiTest("t");
-/*
+
   {
     hetima.HetiTestTicket ticket = test.test("number", 3000);
-    type.Uint8List out = hetima.Bencode.encode(1024);
-    unit.expect("i1024e", convert.UTF8.decode(out.toList()));
     hetima.ArrayBuilder builder = new hetima.ArrayBuilder();
     hetima.EasyParser parser = new hetima.EasyParser(builder);
     hetima.HetiBencode.decode(parser).then((Object o) {
@@ -19,8 +17,8 @@ void main() {
     }).whenComplete(() {
       ticket.fin();
     });
-    builder.appendUint8List(out, 0, out.length);
-  }*/
+    builder.appendUint8List(convert.UTF8.encode("i1024e"), 0, convert.UTF8.encode("i1024e").length);
+  }
   {
     hetima.HetiTestTicket ticket = test.test("number e1", 3000);
     hetima.ArrayBuilder builder = new hetima.ArrayBuilder();
@@ -65,10 +63,9 @@ void main() {
     builder.appendString("000");
     builder.fin();
   }
-  /*
+  
   {
     hetima.HetiTestTicket ticket = test.test("string", 3000);
-    type.Uint8List out = hetima.Bencode.encode("hetimatan");
     hetima.ArrayBuilder builder = new hetima.ArrayBuilder();
     hetima.EasyParser parser = new hetima.EasyParser(builder);
 
@@ -79,8 +76,8 @@ void main() {
     }).whenComplete(() {
       ticket.fin();
     });
-    builder.appendUint8List(out, 0, out.length);
-  }*/
+    builder.appendUint8List(convert.UTF8.encode("9:hetimatan"), 0, convert.UTF8.encode("9:hetimatan").length);
+  }
   {
     hetima.HetiTestTicket ticket = test.test("string e1", 3000);
     hetima.ArrayBuilder builder = new hetima.ArrayBuilder();
@@ -129,14 +126,12 @@ void main() {
     builder.appendString(":abc");
     builder.fin();
   }
-  /*
+
   {
     hetima.HetiTestTicket ticket = test.test("list", 3000);
     List l = new List();
     l.add("test");
     l.add(1024);
-    type.Uint8List out = hetima.Bencode.encode(l);
-    unit.expect("l4:testi1024ee", convert.UTF8.decode(out.toList()));
 
     hetima.ArrayBuilder builder = new hetima.ArrayBuilder();
     hetima.EasyParser parser = new hetima.EasyParser(builder);
@@ -149,8 +144,8 @@ void main() {
     }).whenComplete(() {
       ticket.fin();
     });
-    builder.appendUint8List(out, 0, out.length);
-  }*/
+    builder.appendUint8List(convert.UTF8.encode("l4:testi1024ee"), 0, convert.UTF8.encode("l4:testi1024ee").length);
+  }
   {
     hetima.HetiTestTicket ticket = test.test("list e1", 3000);
 
@@ -200,15 +195,13 @@ void main() {
     builder.appendString("f4:testi1024ee");
     builder.fin();
   }
-  /*
+  
   {
     hetima.HetiTestTicket ticket = test.test("dictionary", 3000);
 
     Map<String, Object> m = new Map();
     m["test"] = "test";
     m["value"] = 1024;
-    type.Uint8List out = hetima.Bencode.encode(m);
-    unit.expect("d4:test4:test5:valuei1024ee", convert.UTF8.decode(out.toList()));
 
     hetima.ArrayBuilder builder = new hetima.ArrayBuilder();
     hetima.EasyParser parser = new hetima.EasyParser(builder);
@@ -221,8 +214,8 @@ void main() {
     }).whenComplete(() {
       ticket.fin();
     });
-    builder.appendUint8List(out, 0, out.length);
-  }*/
+    builder.appendUint8List(convert.UTF8.encode("d4:test4:test5:valuei1024ee"), 0, convert.UTF8.encode("d4:test4:test5:valuei1024ee").length);
+  }
 
   {
     hetima.HetiTestTicket ticket = test.test("dictionary e1", 3000);
