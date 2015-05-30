@@ -7,16 +7,20 @@ import 'dart:core';
 import 'dart:html' as html;
 import '../../hetimacore.dart';
 
+abstract class HetimaFileWriter {
+  async.Future<WriteResult> write(Object o, int start);
+}
+
 class HetimaFileBlob extends HetimaFile {
   html.Blob _mBlob;
-
-  HetimaFileBlob(bl) {
+  HetimaFileWriter _mWriter;
+  HetimaFileBlob(bl, [HetimaFileWriter writer = null]) {
     _mBlob = bl;
+    _mWriter = writer;
   }
 
   async.Future<WriteResult> write(Object o, int start) {
-    async.Completer<WriteResult> completer = new async.Completer();
-    return completer.future;
+    return _mWriter.write(o, start);
   }
 
   async.Future<int> getLength() {
