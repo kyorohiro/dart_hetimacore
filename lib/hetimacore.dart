@@ -12,4 +12,4 @@ part 'src/util/percentencode.dart';
 part 'src/test/hetitest.dart';
 part 'src/lo/hetimabuilder.dart';
 part 'src/util/hetibencode.dart';
-
+part 'src/tmp/hetimafile.dart';

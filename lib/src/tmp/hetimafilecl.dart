@@ -1,4 +1,11 @@
-part of hetimacore_cl;
+library hetimacore_cl.impl;
+import 'dart:typed_data' as data;
+import 'dart:math' as math;
+import 'dart:convert' as convert;
+import 'dart:async' as async;
+import 'dart:core';
+import 'dart:html' as html;
+import '../../hetimacore.dart';
 
 class HetimaFileBlob extends HetimaFile {
   html.Blob _mBlob;
@@ -8,7 +15,8 @@ class HetimaFileBlob extends HetimaFile {
   }
 
   async.Future<WriteResult> write(Object o, int start) {
-    return null;
+    async.Completer<WriteResult> completer = new async.Completer();
+    return completer.future;
   }
 
   async.Future<int> getLength() {
@@ -60,29 +68,11 @@ class HetimaFileGet extends HetimaFile {
     request.send();
     return ret.future;
   }
-/*
-  async.Future<core.int> getLength() {
-    async.Completer<core.int> ret = new async.Completer();
-    if (_mBlob == null) {
-      getBlob().then((html.Blob b) {
-        ret.complete(b.size);
-      });
-    } else {
-      ret.complete(_mBlob.size);
-    }
-    return ret.future;
-  }
-*/
-  
-//  data.Uint8List bbbuffer = null;
   async.Future<int> getLength() {
     async.Completer<int> ret = new async.Completer();
     if (_mBlob == null) {
       getBlob().then((html.Blob b) {
-//        read(0, b.size).then((ReadResult re){
-//          bbbuffer = re.buffer;
           ret.complete(b.size);          
-//        });
       });
     } else {
       ret.complete(_mBlob.size);
@@ -93,13 +83,7 @@ class HetimaFileGet extends HetimaFile {
   async.Future<ReadResult> read(int start, int end) {
     async.Completer<ReadResult> ret = new async.Completer<ReadResult>();
     if (_mBlob != null) {
-//      if(bbbuffer != null) {
-//        //core.print("-read read-\n");
-//        ret.complete(new ReadResult(ReadResult.OK, bbbuffer.sublist(start, end)));
-//        return ret.future;
-//      } else {
         return readBase(ret, start, end);
-//      }
     } else {
       getBlob().then((html.Blob b) {
         readBase(ret, start, end);
@@ -131,6 +115,11 @@ class HetimaFileFS extends HetimaFile {
 
   HetimaFileFS(String name) {
     fileName = name;
+  }
+
+  HetimaFileFS.fromFile(html.FileEntry fileEntry) {
+    this._fileEntry = fileEntry;
+    fileName = fileEntry.name;
   }
 
   async.Future<html.Entry> getEntry() {

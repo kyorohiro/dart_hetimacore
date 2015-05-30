@@ -1,4 +1,5 @@
-part of hetimacore_cl;
+part of hetimacore;
+
 
 abstract class HetimaFile extends HetimaReadBuffer {
   async.Future<int> getLength();
