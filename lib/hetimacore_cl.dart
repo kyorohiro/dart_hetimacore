@@ -6,5 +6,5 @@ import 'dart:async' as async;
 import 'dart:core';
 import 'dart:html' as html;
 import 'hetimacore.dart';
-import  'src/tmp/hetimafilecl.dart';
+export  'src/tmp/hetimafilecl.dart';
 
