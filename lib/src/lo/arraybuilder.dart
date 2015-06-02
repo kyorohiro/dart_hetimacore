@@ -145,7 +145,7 @@ class ArrayBuilder extends HetimaBuilder {
   }
 
   data.Uint8List toUint8List() {
-    return new data.Uint8List.fromList(_buffer8);
+    return new data.Uint8List.fromList(toList());
   }
 
   String toText() {
