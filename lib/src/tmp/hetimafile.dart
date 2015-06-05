@@ -5,6 +5,10 @@ import 'dart:core';
 import '../../hetimacore.dart';
 
 
+abstract class HetimaFileBuilder {
+  async.Future<HetimaFile> createInstance(String path);
+}
+
 abstract class HetimaFile extends HetimaReadBuffer {
   async.Future<int> getLength();
   async.Future<WriteResult> write(Object buffer, int start);

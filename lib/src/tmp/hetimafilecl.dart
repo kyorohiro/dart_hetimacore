@@ -113,6 +113,14 @@ class HetimaFileGet extends HetimaFile {
 
 }
 
+class HetimaFileFSBuilder extends HetimaFileBuilder {
+  async.Future<HetimaFile> createInstance(String path) {
+    async.Completer<HetimaFile> co = new async.Completer();
+    co.complete(new HetimaFileFS(path));
+    return co.future;
+  }
+}
+
 class HetimaFileFS extends HetimaFile {
   String fileName = "";
   html.FileEntry _fileEntry = null;
