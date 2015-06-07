@@ -1,4 +1,4 @@
-library hetimacore.file;
+library hetimacore.mem;
 
 import 'dart:async' as async;
 import 'dart:core';
