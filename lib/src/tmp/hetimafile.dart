@@ -4,15 +4,15 @@ import 'dart:async' as async;
 import 'dart:core';
 import '../../hetimacore.dart';
 
-
 abstract class HetimaFileBuilder {
-  async.Future<HetimaFile> createInstance(String path);
+  async.Future<HetimaFile> createHetimaFile(String path);
 }
 
 abstract class HetimaFile extends HetimaReadBuffer {
   async.Future<int> getLength();
   async.Future<WriteResult> write(Object buffer, int start);
   async.Future<ReadResult> read(int start, int end);
+  void end();
 }
 
 abstract class HetimaReadBuffer {
@@ -61,6 +61,11 @@ class HetimaBuilderToFile extends HetimaFile {
   @override
   async.Future<WriteResult> write(Object buffer, int start) {
     // todo
+    return null;
+  }
+  
+  void end() {
+    mBuilder.fin();
   }
 }
 

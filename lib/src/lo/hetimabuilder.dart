@@ -1,11 +1,19 @@
 part of hetimacore;
 
+abstract class HetimaBuilderBuilder {
+  async.Future<HetimaBuilder> createHetimaBuilder(String path);
+}
+
 abstract class HetimaBuilder {
 
   async.Future<List<int>> getByteFuture(int index, int length);
 
   async.Future<int> getLength();
 
+
+  void fin() {
+    immutable = true;
+  }
 
   async.Completer completerFin = new async.Completer(); 
   async.Future<bool> onFin() {
@@ -14,7 +22,6 @@ abstract class HetimaBuilder {
     }
     return completerFin.future;
   }
-
 
   bool _immutable = false;
   bool get immutable => _immutable;
@@ -60,5 +67,9 @@ class HetimaBuilderAdapter extends HetimaBuilder {
       completer.completeError(e);
     });
     return completer.future;
+  }
+  
+  void fin() {
+    
   }
 }

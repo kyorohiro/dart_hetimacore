@@ -14,19 +14,20 @@ abstract class HetimaFileWriter {
 class HetimaFileBlob extends HetimaFile {
   html.Blob _mBlob;
   HetimaFileWriter _mWriter;
+
   HetimaFileBlob(bl, [HetimaFileWriter writer = null]) {
     _mBlob = bl;
     _mWriter = writer;
-  }
-
-  async.Future<WriteResult> write(Object o, int start) {
-    return _mWriter.write(o, start);
   }
 
   async.Future<int> getLength() {
     async.Completer<int> ret = new async.Completer();
     ret.complete(_mBlob.size);
     return ret.future;
+  }
+
+  async.Future<WriteResult> write(Object o, int start) {
+    return _mWriter.write(o, start);
   }
 
   async.Future<ReadResult> read(int start, int end) {
@@ -45,6 +46,8 @@ class HetimaFileBlob extends HetimaFile {
     return ret.future;
   }
 
+  void end() {
+  }
 }
 
 class HetimaFileGet extends HetimaFile {
@@ -72,6 +75,7 @@ class HetimaFileGet extends HetimaFile {
     request.send();
     return ret.future;
   }
+
   async.Future<int> getLength() {
     async.Completer<int> ret = new async.Completer();
     if (_mBlob == null) {
@@ -111,13 +115,25 @@ class HetimaFileGet extends HetimaFile {
     return ret.future;
   }
 
+  void end() {    
+  }
+
 }
 
-class HetimaFileFSBuilder extends HetimaFileBuilder {
-  async.Future<HetimaFile> createInstance(String path) {
+
+class HetimaFileFSBuilder extends HetimaFileBuilder implements HetimaBuilderBuilder {
+  async.Future<HetimaFile> createHetimaFile(String path) {
     async.Completer<HetimaFile> co = new async.Completer();
     co.complete(new HetimaFileFS(path));
     return co.future;
+  }
+
+  async.Future<HetimaBuilder> createHetimaBuilder(String path) {
+    async.Completer<HetimaBuilder> co = new async.Completer();
+    createHetimaFile(path).then((HetimaFile f) {
+      co.complete(new HetimaFileToBuilder(f));
+    });
+    return co.future;    
   }
 }
 
@@ -209,5 +225,8 @@ class HetimaFileFS extends HetimaFile {
       });
     });
     return c_ompleter.future;
+  }
+
+  void end() {    
   }
 }
