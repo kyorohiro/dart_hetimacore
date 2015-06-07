@@ -128,8 +128,8 @@ class HetimaFileFSBuilder extends HetimaFileBuilder implements HetimaBuilderBuil
     return co.future;
   }
 
-  async.Future<HetimaBuilder> createHetimaBuilder(String path) {
-    async.Completer<HetimaBuilder> co = new async.Completer();
+  async.Future<HetimaReader> createHetimaBuilder(String path) {
+    async.Completer<HetimaReader> co = new async.Completer();
     createHetimaFile(path).then((HetimaFile f) {
       co.complete(new HetimaFileToBuilder(f));
     });

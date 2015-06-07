@@ -1,6 +1,6 @@
 part of hetimacore;
 
-class ArrayBuilder extends HetimaBuilder {
+class ArrayBuilder extends HetimaReader {
   int _max = 1024;
   List<int> _buffer8;
   int _length = 0;

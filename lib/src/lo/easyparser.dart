@@ -3,8 +3,8 @@ part of hetimacore;
 class EasyParser {
   int index = 0;
   List<int> stack = new List();
-  HetimaBuilder buffer = null;
-  EasyParser(HetimaBuilder builder) {
+  HetimaReader buffer = null;
+  EasyParser(HetimaReader builder) {
     buffer = builder;
   }
 

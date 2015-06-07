@@ -36,8 +36,8 @@ class ReadResult {
 
 class HetimaBuilderToFile extends HetimaFile {
   
-  HetimaBuilder mBuilder;
-  HetimaBuilderToFile(HetimaBuilder builder) {
+  HetimaReader mBuilder;
+  HetimaBuilderToFile(HetimaReader builder) {
     mBuilder = builder;
   }
   @override
@@ -69,7 +69,7 @@ class HetimaBuilderToFile extends HetimaFile {
   }
 }
 
-class HetimaFileToBuilder extends HetimaBuilder {
+class HetimaFileToBuilder extends HetimaReader {
 
   HetimaFile mFile;
 
