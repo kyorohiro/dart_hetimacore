@@ -4,6 +4,7 @@ class EasyParser {
   int index = 0;
   List<int> stack = new List();
   HetimaReader buffer = null;
+
   EasyParser(HetimaReader builder) {
     buffer = builder;
   }
