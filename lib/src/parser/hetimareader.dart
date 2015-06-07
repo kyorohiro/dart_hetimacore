@@ -1,4 +1,6 @@
-part of hetimacore;
+library hetimacore.reader;
+import 'dart:async' as async;
+import 'dart:core';
 
 abstract class HetimaReader {
 

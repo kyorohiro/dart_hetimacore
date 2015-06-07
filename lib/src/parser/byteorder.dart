@@ -1,4 +1,10 @@
-part of hetimacore;
+library hetimacore.byteorder;
+import 'dart:typed_data' as data;
+import 'dart:math' as math;
+import 'dart:convert' as convert;
+import 'dart:async' as async;
+import 'dart:core';
+
 
 abstract class ByteOrder {
   static final int BYTEORDER_BIG_ENDIAN = 1;

@@ -1,4 +1,10 @@
-part of hetimacore;
+library hetimacore.array;
+import 'dart:typed_data' as data;
+import 'dart:math' as math;
+import 'dart:convert' as convert;
+import 'dart:async' as async;
+import 'dart:core';
+import 'hetimareader.dart';
 
 class ArrayBuilder extends HetimaReader {
   int _max = 1024;

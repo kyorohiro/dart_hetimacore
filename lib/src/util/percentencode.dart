@@ -1,4 +1,11 @@
-part of hetimacore;
+library hetimacore.percent;
+import 'dart:typed_data' as data;
+import 'dart:math' as math;
+import 'dart:convert' as convert;
+import 'dart:async' as async;
+import 'dart:core';
+import '../parser/arraybuilder.dart';
+
 class PercentEncode
 {
   ArrayBuilder builder = new ArrayBuilder();
