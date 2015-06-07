@@ -4,13 +4,13 @@ import 'dart:math' as math;
 import 'dart:convert' as convert;
 import 'dart:async' as async;
 import 'dart:core';
-export 'src/tmp/hetimafile.dart';
+export 'src/data/hetimadata.dart';
 
+part 'src/parser/byteorder.dart';
+part 'src/parser/easyparser.dart';
+part 'src/parser/arraybuilder.dart';
+part 'src/parser/hetimareader.dart';
 part 'src/util/uuid.dart';
-part 'src/lo/byteorder.dart';
-part 'src/lo/easyparser.dart';
-part 'src/lo/arraybuilder.dart';
 part 'src/util/percentencode.dart';
 part 'src/test/hetitest.dart';
-part 'src/lo/hetimabuilder.dart';
 

@@ -1,9 +1,5 @@
 part of hetimacore;
 
-abstract class HetimaBuilderBuilder {
-  async.Future<HetimaReader> createHetimaBuilder(String path);
-}
-
 abstract class HetimaReader {
 
   async.Future<List<int>> getByteFuture(int index, int length);
@@ -37,11 +33,11 @@ abstract class HetimaReader {
 
 }
 
-class HetimaBuilderAdapter extends HetimaReader {
+class HetimaReaderAdapter extends HetimaReader {
   HetimaReader _base = null;
   int _startIndex = 0;
 
-  HetimaBuilderAdapter(HetimaReader builder, int startIndex) {
+  HetimaReaderAdapter(HetimaReader builder, int startIndex) {
     _base = builder;
     _startIndex = startIndex;
   }
@@ -72,6 +68,6 @@ class HetimaBuilderAdapter extends HetimaReader {
   }
   
   void fin() {
-    
+    _base.fin();
   }
 }

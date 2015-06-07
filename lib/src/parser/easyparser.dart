@@ -9,7 +9,7 @@ class EasyParser {
   }
 
   EasyParser toClone() {
-    EasyParser parser = new EasyParser(new HetimaBuilderAdapter(buffer, 0));
+    EasyParser parser = new EasyParser(new HetimaReaderAdapter(buffer, 0));
     parser.index = index;
     parser.stack = new List.from(stack);
     return parser;

@@ -4,18 +4,24 @@ import 'dart:async' as async;
 import 'dart:core';
 import '../../hetimacore.dart';
 
-abstract class HetimaFileBuilder {
-  async.Future<HetimaFile> createHetimaFile(String path);
+abstract class HetimaDataBuilder {
+  async.Future<HetimaData> createHetimaData(String path);
 }
 
-abstract class HetimaFile extends HetimaReadBuffer {
+abstract class HetimaData extends HetimaFileReader {
+  bool get writable => false;
+  bool get readable => false;
   async.Future<int> getLength();
   async.Future<WriteResult> write(Object buffer, int start);
   async.Future<ReadResult> read(int start, int end);
-  void end();
+  void beToReadOnly();
 }
 
-abstract class HetimaReadBuffer {
+abstract class HetimaFileWriter {
+  async.Future<WriteResult> write(Object o, int start);
+}
+
+abstract class HetimaFileReader {
   async.Future<int> getLength();
   async.Future<ReadResult> read(int start, int end);
 }
@@ -34,7 +40,7 @@ class ReadResult {
   }
 }
 
-class HetimaBuilderToFile extends HetimaFile {
+class HetimaBuilderToFile extends HetimaData {
   
   HetimaReader mBuilder;
   HetimaBuilderToFile(HetimaReader builder) {
@@ -64,16 +70,16 @@ class HetimaBuilderToFile extends HetimaFile {
     return null;
   }
   
-  void end() {
+  void beToReadOnly() {
     mBuilder.fin();
   }
 }
 
 class HetimaFileToBuilder extends HetimaReader {
 
-  HetimaFile mFile;
+  HetimaData mFile;
 
-  HetimaFileToBuilder(HetimaFile f) {
+  HetimaFileToBuilder(HetimaData f) {
     mFile = f;
   }
 
