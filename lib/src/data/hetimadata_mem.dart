@@ -39,6 +39,9 @@ class HetimaDataMemory extends HetimaData {
 
   async.Future<ReadResult> read(int start, int end) {
     async.Completer<ReadResult> comp = new async.Completer();
+    if(end > _dataBuffer.length) {
+      end = _dataBuffer.length;
+    }
     comp.complete(new ReadResult(ReadResult.OK, _dataBuffer.sublist(start, end)));
     return comp.future;
   }
