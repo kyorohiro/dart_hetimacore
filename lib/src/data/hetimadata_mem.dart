@@ -5,7 +5,7 @@ import 'dart:core';
 import 'hetimadata.dart';
 import '../parser/arraybuilder.dart';
 
-abstract class HetimaDataMemory extends HetimaData {
+class HetimaDataMemory extends HetimaData {
   bool get writable => true;
   bool get readable => true;
 
