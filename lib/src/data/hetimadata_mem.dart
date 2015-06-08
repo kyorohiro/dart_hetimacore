@@ -3,25 +3,32 @@ library hetimacore.mem;
 import 'dart:async' as async;
 import 'dart:core';
 import 'hetimadata.dart';
-import '../parser/arraybuilder.dart';
 
 class HetimaDataMemory extends HetimaData {
   bool get writable => true;
   bool get readable => true;
 
-  ArrayBuilder _dataBuffer = null;
+  List<int> _dataBuffer = null;
   HetimaDataMemory() {
-    _dataBuffer = new ArrayBuilder();
+    _dataBuffer = [];
   }
 
   async.Future<int> getLength() {
-    return _dataBuffer.getLength();
+    async.Completer<int> comp = new async.Completer();
+    comp.complete(_dataBuffer.length);
+    return comp.future;
   }
 
   async.Future<WriteResult> write(Object buffer, int start) {
     async.Completer<WriteResult> comp = new async.Completer();
     if (buffer is List<int>) {
-      _dataBuffer.appendIntList(buffer, start, buffer.length);
+      for (int i = 0; i < buffer.length; i++) {
+        if (start + i < _dataBuffer.length) {
+          _dataBuffer[start + i] = buffer[i];
+        } else {
+          _dataBuffer.add(buffer[i]);
+        }
+      }
       comp.complete(new WriteResult());
     } else {
       // TODO
@@ -32,13 +39,11 @@ class HetimaDataMemory extends HetimaData {
 
   async.Future<ReadResult> read(int start, int end) {
     async.Completer<ReadResult> comp = new async.Completer();
-    _dataBuffer.getByteFuture(start, end - start).then((List<int> v) {
-      comp.complete(new ReadResult(ReadResult.OK, v));
-    });
+    comp.complete(new ReadResult(ReadResult.OK, _dataBuffer.sublist(start, end)));
     return comp.future;
   }
 
   void beToReadOnly() {
-    _dataBuffer.fin();
+    //
   }
 }
