@@ -130,10 +130,6 @@ class HetimaDataCache extends HetimaData {
       int index = i;
       int next = n = i + (cashSize - (i + cashSize) % cashSize);
       act.add(getCashInfo(index).then((CashInfo ret) {
-        int l = length;
-        if (l > cashSize) {
-          l = cashSize;
-        }
         return ret.dataBuffer.read(index - ret.index, next - index);
       }));
     }
@@ -146,7 +142,6 @@ class HetimaDataCache extends HetimaData {
       ReadResult r = new ReadResult(ReadResult.OK, _buffer);
       com.complete(r);
     });
-
     return com.future;
   }
 
