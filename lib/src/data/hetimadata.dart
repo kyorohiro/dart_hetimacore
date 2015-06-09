@@ -23,7 +23,7 @@ abstract class HetimaFileWriter {
 
 abstract class HetimaFileReader {
   async.Future<int> getLength();
-  async.Future<ReadResult> read(int start, int end);
+  async.Future<ReadResult> read(int offset, int length);
 }
 
 class WriteResult {
