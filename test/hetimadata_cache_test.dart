@@ -277,4 +277,87 @@ void main() {
       });
     });
   });
+  
+  
+  unit.group("[many write Size] ", (){
+    //
+    //
+    unit.test("offset 0", () {
+      HetimaDataMemory dummy = new HetimaDataMemory([1,2,3,4,5]);
+      
+      return HetimaDataCache.createWithReuseCashData(dummy,cacheSize: 3, cacheNum: 3)
+          .then((HetimaDataCache cache) {
+        return cache.write([1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20], 0).then((WriteResult w) {
+          return cache.read(0, 20);
+        }).then((ReadResult r) {
+          print("--1--");
+          unit.expect(r.buffer, [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]);
+          return cache.flush();
+        }).then((_) {
+          print("--2--");
+          unit.expect(dummy.getBuffer(0, 100),[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]);
+       });
+      });
+    });
+    
+    //
+    //
+    unit.test("offset 1", () {
+      HetimaDataMemory dummy = new HetimaDataMemory([1,2,3,4,5]);
+      
+      return HetimaDataCache.createWithReuseCashData(dummy,cacheSize: 3, cacheNum: 3)
+          .then((HetimaDataCache cache) {
+        return cache.write([1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20], 1).then((WriteResult w) {
+          return cache.read(0, 21);
+        }).then((ReadResult r) {
+          print("--1--");
+          unit.expect(r.buffer, [1,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]);
+          return cache.flush();
+        }).then((_) {
+          print("--2--");
+          unit.expect(dummy.getBuffer(0, 100),[1,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]);
+       });
+      });
+    });
+    
+    //
+    //
+    unit.test("offset 2", () {
+      HetimaDataMemory dummy = new HetimaDataMemory([1,2,3,4,5]);
+      
+      return HetimaDataCache.createWithReuseCashData(dummy,cacheSize: 3, cacheNum: 3)
+          .then((HetimaDataCache cache) {
+        return cache.write([1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20], 2).then((WriteResult w) {
+          return cache.read(0, 22);
+        }).then((ReadResult r) {
+          print("--1--");
+          unit.expect(r.buffer, [1,2,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]);
+          return cache.flush();
+        }).then((_) {
+          print("--2--");
+          unit.expect(dummy.getBuffer(0, 100),[1,2,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]);
+       });
+      });
+    });
+
+    //
+    //
+    unit.test("offset 3", () {
+      HetimaDataMemory dummy = new HetimaDataMemory([1,2,3,4,5]);
+      
+      return HetimaDataCache.createWithReuseCashData(dummy,cacheSize: 3, cacheNum: 3)
+          .then((HetimaDataCache cache) {
+        return cache.write([1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20], 3).then((WriteResult w) {
+          return cache.read(0, 23);
+        }).then((ReadResult r) {
+          print("--1--");
+          unit.expect(r.buffer, [1,2,3,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]);
+          return cache.flush();
+        }).then((_) {
+          print("--2--");
+          unit.expect(dummy.getBuffer(0, 100),[1,2,3,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]);
+       });
+      });
+    });
+  });
 }
