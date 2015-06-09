@@ -72,31 +72,60 @@ class HetimaDataCache extends HetimaData {
     return com.future;
   }
 
-  async.Future<WriteResult> write(List<int> buffer, int start) {
-    return getCashInfo(start).then((CashInfo ret) {
+  async.Future<WriteResult> write(List<int> buffer, int offset) {
+    async.Completer<WriteResult> com = new async.Completer();
+
+    // add 0
+    if(offset > cashLength) {
+      List<int> zero = new List.filled(offset-cashLength, 0);
+      offset = cashLength;
+      buffer.insertAll(0, zero);
+    }
+
+    int length = buffer.length;
+    int n = 0;
+    List<async.Future> act = [];
+
+    for (int i = offset; i < (offset + length); i = n) {
+      int index = i;
+      int next = n = i + (cashSize - (i + cashSize) % cashSize);
+      act.add(getCashInfo(index).then((CashInfo ret) {
+        return ret.dataBuffer.write(buffer.sublist(index, next), index - ret.index);
+      }));
+    }
+
+    async.Future.wait(act).then((List<WriteResult> rl) {
+      com.complete(new WriteResult());
+    });
+
+    return com.future;
+  }
+    /*
+  return getCashInfo(start).then((CashInfo ret) {
       int l = start + buffer.length;
       if (cashLength < l) {
         cashLength = l;
       }
       return ret.dataBuffer.write(buffer, start - ret.index);
     });
-  }
+    * *
+     */
 
   async.Future<ReadResult> read(int offset, int length) {
     async.Completer<ReadResult> com = new async.Completer();
     List<async.Future> act = [];
 
-    int n= 0;
-    for (int i = offset; i < (offset + length); i=n) {
+    int n = 0;
+    for (int i = offset; i < (offset + length); i = n) {
       int index = i;
-      int next = n = i+(cashSize-(i+cashSize)%cashSize);
+      int next = n = i + (cashSize - (i + cashSize) % cashSize);
       act.add(getCashInfo(index).then((CashInfo ret) {
 //        return ret.dataBuffer.read(offset - ret.index, length - ret.index);
         int l = length;
-        if(l > cashSize) {
+        if (l > cashSize) {
           l = cashSize;
         }
-        return ret.dataBuffer.read(index-ret.index, next-index);
+        return ret.dataBuffer.read(index - ret.index, next - index);
       }));
     }
 
