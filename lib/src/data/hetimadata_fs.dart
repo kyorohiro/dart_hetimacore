@@ -1,4 +1,5 @@
 library hetimacore_cl.impl;
+
 import 'dart:typed_data' as data;
 import 'dart:math' as math;
 import 'dart:convert' as convert;
@@ -6,7 +7,6 @@ import 'dart:async' as async;
 import 'dart:core';
 import 'dart:html' as html;
 import '../../hetimacore.dart';
-
 
 class HetimaDataFSBuilder extends HetimaDataBuilder {
   async.Future<HetimaData> createHetimaData(String path) {
@@ -53,7 +53,6 @@ class HetimaDataFS extends HetimaData {
     return completer.future;
   }
 
-
   async.Future<int> getLength() {
     async.Completer<int> completer = new async.Completer();
     init().then((e) {
@@ -65,18 +64,27 @@ class HetimaDataFS extends HetimaData {
     return completer.future;
   }
 
-
   async.Future<WriteResult> write(Object buffer, int start) {
+    if (buffer is List<int> && !(buffer is data.Uint8List)) {
+      buffer = new data.Uint8List.fromList(buffer);
+    }
+
     async.Completer<WriteResult> completer = new async.Completer();
     init().then((e) {
       _fileEntry.createWriter().then((html.FileWriter writer) {
         writer.onWrite.listen((html.ProgressEvent e) {
           completer.complete(new WriteResult());
         });
-        if (start > 0) {
-          writer.seek(start);
-        }
-        writer.write(new html.Blob([buffer]));
+        return getLength().then((int len) {
+          data.Uint8List dummy = new data.Uint8List.fromList([]);
+          if (len < start) {
+            dummy.addAll(new List.filled(start-len, 0));
+            writer.seek(len);
+          } else {
+            writer.seek(start);
+          }
+          writer.write(new html.Blob([dummy,buffer]));
+        });
       });
     });
     return completer.future;
@@ -103,12 +111,11 @@ class HetimaDataFS extends HetimaData {
         reader.onLoad.listen((html.ProgressEvent e) {
           c_ompleter.complete(new ReadResult(ReadResult.OK, reader.result));
         });
-        reader.readAsArrayBuffer(f.slice(offset, offset+length));
+        reader.readAsArrayBuffer(f.slice(offset, offset + length));
       });
     });
     return c_ompleter.future;
   }
 
-  void beToReadOnly() {    
-  }
+  void beToReadOnly() {}
 }
