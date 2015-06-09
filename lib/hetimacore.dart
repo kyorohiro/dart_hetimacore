@@ -10,6 +10,7 @@ export 'src/parser/easyparser.dart';
 export 'src/parser/arraybuilder.dart';
 export 'src/util/percentencode.dart';
 export 'src/data/hetimadata_mem.dart';
+export 'src/data/hetimadata_cache.dart';
 
 part 'src/util/uuid.dart';
 part 'src/test/hetitest.dart';
