@@ -4,7 +4,7 @@ import 'dart:async' as async;
 
 void main() {
   unit.group("", (){
-    /*
+
     unit.test("hetimadata_cache 1: init", () {
       HetimaDataMemory dummy = new HetimaDataMemory();
       HetimaDataCache cache = new HetimaDataCache(dummy);      
@@ -33,7 +33,6 @@ void main() {
         unit.expect(dummy.getBuffer(0, 100), [0,0,0,1,2,3]);
      });
     });
-    */
     unit.test("hetimadata_cache 3: init", () {
       HetimaDataMemory dummy = new HetimaDataMemory();
       HetimaDataCache cache = new HetimaDataCache(dummy,cacheSize: 3, cacheNum: 3);

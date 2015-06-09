@@ -90,6 +90,9 @@ class HetimaDataCache extends HetimaData {
       int index = i;
       int next = n = i + (cashSize - (i + cashSize) % cashSize);
       act.add(getCashInfo(index).then((CashInfo ret) {
+        if(next > buffer.length) {
+          next = buffer.length;
+        }
         return ret.dataBuffer.write(buffer.sublist(index, next), index - ret.index);
       }));
     }
