@@ -9,8 +9,12 @@ class HetimaDataMemory extends HetimaData {
   bool get readable => true;
 
   List<int> _dataBuffer = null;
-  HetimaDataMemory() {
-    _dataBuffer = [];
+  HetimaDataMemory([List<int> buffer=null]) {
+    if(buffer != null) {
+      _dataBuffer = new List.from(buffer);
+    } else {
+      _dataBuffer = [];      
+    }
   }
 
   List<int> getBuffer(int start, int length) {

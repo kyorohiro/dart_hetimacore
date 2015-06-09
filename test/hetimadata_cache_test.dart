@@ -133,5 +133,25 @@ void main() {
         unit.expect(dummy.getBuffer(0, 100), []);
      });
     });
+
+    //
+    //
+    unit.test("hetimadata_cache 9: init", () {
+      HetimaDataMemory dummy = new HetimaDataMemory([1,2,3,4,5]);
+      
+      return HetimaDataCache.createWithReuseCashData(dummy,cacheSize: 3, cacheNum: 3)
+          .then((HetimaDataCache cache) {
+        return cache.write([1,2,3], 3).then((WriteResult w) {
+          return cache.read(0, 6);
+        }).then((ReadResult r) {
+          print("--1--");
+          unit.expect(r.buffer, [1,2,3,1,2,3]);
+          return cache.flush();
+        }).then((_) {
+          print("--2--");
+          unit.expect(dummy.getBuffer(0, 100), [1,2,3,1,2,3]);
+       });
+      });
+    });
   });
 }

@@ -31,6 +31,7 @@ class HetimaDataCache extends HetimaData {
     HetimaDataCache ret = new HetimaDataCache(cashData,cacheSize: cacheSize, cacheNum: cacheNum);
     ret.getLength().then((int length) {
       ret._cashLength = length;
+      com.complete(ret);
     }).catchError((e){
       com.completeError(e);
     });
@@ -52,6 +53,8 @@ class HetimaDataCache extends HetimaData {
     _cashData.getLength().then((int len) {
       if (_cashLength > len) {
         com.complete(_cashLength);
+      } else {
+        com.complete(len);
       }
     }).catchError(com.completeError);
     return com.future;
@@ -104,10 +107,10 @@ class HetimaDataCache extends HetimaData {
       int index = i;
       int next = n = i + (cashSize - (i + cashSize) % cashSize);
       act.add(getCashInfo(index).then((CashInfo ret) {
-        if(next > buffer.length) {
-          next = buffer.length;
+        if(next-offset > buffer.length) {
+          next = buffer.length + offset;
         }
-        return ret.dataBuffer.write(buffer.sublist(index, next), index - ret.index);
+        return ret.dataBuffer.write(buffer.sublist(index-offset, next-offset), index - ret.index);
       }));
     }
 
