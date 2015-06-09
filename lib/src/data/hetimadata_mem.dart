@@ -14,11 +14,11 @@ class HetimaDataMemory extends HetimaData {
   }
 
   List<int> getBuffer(int start, int length) {
-    int end = start+length;
-    if(end > _dataBuffer.length) {
+    int end = start + length;
+    if (end > _dataBuffer.length) {
       end = _dataBuffer.length;
     }
-    return _dataBuffer.sublist(start,end);
+    return _dataBuffer.sublist(start, end);
   }
 
   async.Future<int> getLength() {
@@ -30,9 +30,8 @@ class HetimaDataMemory extends HetimaData {
   async.Future<WriteResult> write(Object buffer, int start) {
     async.Completer<WriteResult> comp = new async.Completer();
     if (buffer is List<int>) {
-      
-      if(_dataBuffer.length < start) {
-        _dataBuffer.addAll(new List.filled(start-_dataBuffer.length, 0));
+      if (_dataBuffer.length < start) {
+        _dataBuffer.addAll(new List.filled(start - _dataBuffer.length, 0));
       }
 
       for (int i = 0; i < buffer.length; i++) {
@@ -52,10 +51,15 @@ class HetimaDataMemory extends HetimaData {
 
   async.Future<ReadResult> read(int offset, int length) {
     async.Completer<ReadResult> comp = new async.Completer();
-    if(length > _dataBuffer.length) {
-      length = _dataBuffer.length;
+    int end = offset + length;
+    if (end > _dataBuffer.length) {
+      end = _dataBuffer.length;
     }
-    comp.complete(new ReadResult(ReadResult.OK, _dataBuffer.sublist(offset, offset+length)));
+    if (offset >= end) {
+      comp.complete(new ReadResult(ReadResult.OK, []));
+    } else {
+      comp.complete(new ReadResult(ReadResult.OK, _dataBuffer.sublist(offset, end)));
+    }
     return comp.future;
   }
 

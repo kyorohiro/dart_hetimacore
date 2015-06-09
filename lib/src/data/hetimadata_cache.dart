@@ -29,8 +29,8 @@ class HetimaDataCache extends HetimaData {
   HetimaDataCache(HetimaData cashData, {cacheSize: 1024, cacheNum: 3}) {
     this._cashInfoList = [];
     this._cashData = cashData;
-    this.cashSize = cashSize;
-    this.cashNum = cashNum;
+    this.cashSize = cacheSize;
+    this.cashNum = cacheNum;
   }
 
   async.Future<int> getLength() {
@@ -44,7 +44,6 @@ class HetimaDataCache extends HetimaData {
   }
 
   async.Future<CashInfo> getCashInfo(int startA) {
-
     async.Completer<CashInfo> com = new async.Completer();
 
     for (CashInfo c in _cashInfoList) {
@@ -84,13 +83,37 @@ class HetimaDataCache extends HetimaData {
   }
 
   async.Future<ReadResult> read(int offset, int length) {
-    return getCashInfo(offset).then((CashInfo ret) {
-      return ret.dataBuffer.read(offset - ret.index, length - ret.index);
+    async.Completer<ReadResult> com = new async.Completer();
+    List<async.Future> act = [];
+
+    int n= 0;
+    for (int i = offset; i < (offset + length); i=n) {
+      int index = i;
+      int next = n = i+(cashSize-(i+cashSize)%cashSize);
+      act.add(getCashInfo(index).then((CashInfo ret) {
+//        return ret.dataBuffer.read(offset - ret.index, length - ret.index);
+        int l = length;
+        if(l > cashSize) {
+          l = cashSize;
+        }
+        return ret.dataBuffer.read(index-ret.index, next-index);
+      }));
+    }
+
+    async.Future.wait(act).then((List<ReadResult> rl) {
+      List<int> _buffer = [];
+      for (ReadResult r in rl) {
+        _buffer.addAll(r.buffer);
+      }
+      ReadResult r = new ReadResult(ReadResult.OK, _buffer);
+      com.complete(r);
     });
+
+    return com.future;
   }
 
   void beToReadOnly() {}
-  
+
   async.Future _writeFunc(CashInfo info) {
     if (info == null) {
       async.Completer comp = new async.Completer();
