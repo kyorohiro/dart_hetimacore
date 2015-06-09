@@ -17,6 +17,10 @@ class HetimaDataMemory extends HetimaData {
     }
   }
 
+  String toDebug() {
+    return "${_dataBuffer}";
+  }
+
   List<int> getBuffer(int start, int length) {
     int end = start + length;
     if (end > _dataBuffer.length) {

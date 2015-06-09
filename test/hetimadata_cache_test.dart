@@ -3,7 +3,6 @@ import 'package:hetimacore/hetimacore.dart';
 import 'dart:async' as async;
 
 void main() {
-  /*
   unit.group("rba", (){
 
     //
@@ -135,8 +134,6 @@ void main() {
      });
     });
   });
-  */
-  /*
   unit.group("[cashSize == writeSize] ", (){
     //
     //
@@ -280,9 +277,7 @@ void main() {
     });
   });
   
-  */
   unit.group("[many write Size] ", (){
-    /*
     //
     //
     unit.test("offset 0", () {
@@ -342,7 +337,6 @@ void main() {
        });
       });
     });
-*/
     //
     //
     unit.test("offset 3", () {
@@ -359,6 +353,68 @@ void main() {
         }).then((_) {
           print("--2--");
           unit.expect(dummy.getBuffer(0, 100),[1,2,3,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]);
+       });
+      });
+    });
+    //
+    //
+    unit.test("offset 4", () {
+      HetimaDataMemory dummy = new HetimaDataMemory([1,2,3,4,5]);
+      
+      return HetimaDataCache.createWithReuseCashData(dummy,cacheSize: 3, cacheNum: 3)
+          .then((HetimaDataCache cache) {
+        return cache.write([1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20], 4).then((WriteResult w) {
+          print("## ====> NEXT kiyo");
+          return cache.read(0, 24);
+        }).then((ReadResult r) {
+          print("--1--");
+          unit.expect(r.buffer, [1,2,3,4,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]);
+          return cache.flush();
+        }).then((_) {
+          print("--2--");
+          unit.expect(dummy.getBuffer(0, 100),[1,2,3,4,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]);
+       });
+      });
+    });
+    
+    //
+    //
+    unit.test("offset 5", () {
+      HetimaDataMemory dummy = new HetimaDataMemory([1,2,3,4,5]);
+      
+      return HetimaDataCache.createWithReuseCashData(dummy,cacheSize: 3, cacheNum: 3)
+          .then((HetimaDataCache cache) {
+        return cache.write([1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20], 5).then((WriteResult w) {
+          print("## ====> NEXT kiyo");
+          return cache.read(0, 25);
+        }).then((ReadResult r) {
+          print("--1--");
+          unit.expect(r.buffer, [1,2,3,4,5,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]);
+          return cache.flush();
+        }).then((_) {
+          print("--2--");
+          unit.expect(dummy.getBuffer(0, 100),[1,2,3,4,5,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]);
+       });
+      });
+    });
+    
+    //
+    //
+    unit.test("offset 6", () {
+      HetimaDataMemory dummy = new HetimaDataMemory([1,2,3,4,5]);
+      
+      return HetimaDataCache.createWithReuseCashData(dummy,cacheSize: 3, cacheNum: 3)
+          .then((HetimaDataCache cache) {
+        return cache.write([1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20], 6).then((WriteResult w) {
+          print("## ====> NEXT kiyo");
+          return cache.read(0, 26);
+        }).then((ReadResult r) {
+          print("--1--");
+          unit.expect(r.buffer, [1,2,3,4,5,0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]);
+          return cache.flush();
+        }).then((_) {
+          print("--2--");
+          unit.expect(dummy.getBuffer(0, 100),[1,2,3,4,5,0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]);
        });
       });
     });

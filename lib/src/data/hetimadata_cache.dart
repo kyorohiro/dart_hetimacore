@@ -74,8 +74,9 @@ class HetimaDataCache extends HetimaData {
 
     CashInfo removeInfo = null;
     CashInfo writeInfo = new CashInfo(startA - startA % cashSize, cashSize);
+
     // not found
-    if (_cashInfoList.length >= 3) {
+    if (_cashInfoList.length >= cashNum) {
       removeInfo = _cashInfoList.removeAt(0);
     }
 
@@ -148,6 +149,7 @@ class HetimaDataCache extends HetimaData {
   void beToReadOnly() {}
 
   async.Future _writeFunc(CashInfo info) {
+    
     if (info == null) {
       async.Completer comp = new async.Completer();
       comp.complete(null);
@@ -161,9 +163,12 @@ class HetimaDataCache extends HetimaData {
   }
 
   async.Future _readFunc(CashInfo ret) {
+    // kiyokiyo
+    return new async.Future((){
     return _cashData.read(ret.index, cashSize).then((ReadResult r) {
       _cashInfoList.add(ret);
       return ret.dataBuffer.write(r.buffer, 0);
+    });
     });
   }
 
