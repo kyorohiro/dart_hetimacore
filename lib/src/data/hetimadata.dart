@@ -13,7 +13,7 @@ abstract class HetimaData extends HetimaFileReader {
   bool get readable => false;
   async.Future<int> getLength();
   async.Future<WriteResult> write(Object buffer, int start);
-  async.Future<ReadResult> read(int start, int end);
+  async.Future<ReadResult> read(int offset, int length);
   void beToReadOnly();
 }
 
@@ -52,9 +52,9 @@ class HetimaBuilderToFile extends HetimaData {
   }
 
   @override
-  async.Future<ReadResult> read(int start, int end) {
+  async.Future<ReadResult> read(int offset, int length) {
     async.Completer<ReadResult> cc = new async.Completer();
-    mBuilder.getByteFuture(start, end-start).then((List<int> b){
+    mBuilder.getByteFuture(offset, length).then((List<int> b){
       ReadResult result = new ReadResult(ReadResult.OK,
           new data.Uint8List.fromList(b));
       cc.complete(result);
@@ -86,7 +86,7 @@ class HetimaFileToBuilder extends HetimaReader {
   @override
   async.Future<List<int>> getByteFuture(int index, int length) {
     async.Completer<List<int>> c = new async.Completer();
-    mFile.read(index, index+length).then((ReadResult r) {
+    mFile.read(index, length).then((ReadResult r) {
       if(r.status == ReadResult.OK) {
         c.complete(r.buffer.toList());
       } else {

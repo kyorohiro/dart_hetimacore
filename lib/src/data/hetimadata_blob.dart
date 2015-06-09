@@ -31,7 +31,7 @@ class HetimaDataBlob extends HetimaData {
     return _mWriter.write(o, start);
   }
 
-  async.Future<ReadResult> read(int start, int end) {
+  async.Future<ReadResult> read(int offset, int length) {
     async.Completer<ReadResult> ret = new async.Completer<ReadResult>();
     html.FileReader reader = new html.FileReader();
     reader.onLoad.listen((html.ProgressEvent e) {
@@ -43,7 +43,7 @@ class HetimaDataBlob extends HetimaData {
     reader.onAbort.listen((html.ProgressEvent e) {
       ret.complete(new ReadResult(ReadResult.NG, null));
     });
-    reader.readAsArrayBuffer(_mBlob.slice(start, end));
+    reader.readAsArrayBuffer(_mBlob.slice(offset, offset+length));
     return ret.future;
   }
 

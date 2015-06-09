@@ -95,7 +95,7 @@ class HetimaDataFS extends HetimaData {
     return completer.future;
   }
 
-  async.Future<ReadResult> read(int start, int end) {
+  async.Future<ReadResult> read(int offset, int length) {
     async.Completer<ReadResult> c_ompleter = new async.Completer();
     init().then((e) {
       html.FileReader reader = new html.FileReader();
@@ -103,7 +103,7 @@ class HetimaDataFS extends HetimaData {
         reader.onLoad.listen((html.ProgressEvent e) {
           c_ompleter.complete(new ReadResult(ReadResult.OK, reader.result));
         });
-        reader.readAsArrayBuffer(f.slice(start, end));
+        reader.readAsArrayBuffer(f.slice(offset, offset+length));
       });
     });
     return c_ompleter.future;

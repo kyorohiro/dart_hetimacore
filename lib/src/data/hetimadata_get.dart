@@ -48,13 +48,13 @@ class HetimaDataGet extends HetimaData {
     return ret.future;
   }
 
-  async.Future<ReadResult> read(int start, int end) {
+  async.Future<ReadResult> read(int offset, int length) {
     async.Completer<ReadResult> ret = new async.Completer<ReadResult>();
     if (_mBlob != null) {
-        return readBase(ret, start, end);
+        return readBase(ret, offset, length);
     } else {
       getBlob().then((html.Blob b) {
-        readBase(ret, start, end);
+        readBase(ret, offset, length);
       });
       return ret.future;
     }

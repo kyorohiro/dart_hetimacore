@@ -83,9 +83,9 @@ class HetimaDataCache extends HetimaData {
     });
   }
 
-  async.Future<ReadResult> read(int start, int end) {
-    return getCashInfo(start).then((CashInfo ret) {
-      return ret.dataBuffer.read(start - ret.index, end - start);
+  async.Future<ReadResult> read(int offset, int length) {
+    return getCashInfo(offset).then((CashInfo ret) {
+      return ret.dataBuffer.read(offset - ret.index, length - ret.index);
     });
   }
 
