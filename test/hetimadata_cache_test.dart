@@ -5,6 +5,7 @@ import 'dart:async' as async;
 void main() {
   unit.group("", (){
 
+    //
     unit.test("hetimadata_cache 1: init", () {
       HetimaDataMemory dummy = new HetimaDataMemory();
       HetimaDataCache cache = new HetimaDataCache(dummy);      
@@ -19,6 +20,8 @@ void main() {
         unit.expect(dummy.getBuffer(0, 100), [1,2,3]);
      });
     });
+
+    //
     unit.test("hetimadata_cache 2: init", () {
       HetimaDataMemory dummy = new HetimaDataMemory();
       HetimaDataCache cache = new HetimaDataCache(dummy);      
@@ -33,6 +36,8 @@ void main() {
         unit.expect(dummy.getBuffer(0, 100), [0,0,0,1,2,3]);
      });
     });
+
+    //
     unit.test("hetimadata_cache 3: init", () {
       HetimaDataMemory dummy = new HetimaDataMemory();
       HetimaDataCache cache = new HetimaDataCache(dummy,cacheSize: 3, cacheNum: 3);
@@ -47,5 +52,22 @@ void main() {
         unit.expect(dummy.getBuffer(0, 100), [0,0,0,1,2,3]);
      });
     });
+    
+    //
+    unit.test("hetimadata_cache 4: init", () {
+      HetimaDataMemory dummy = new HetimaDataMemory();
+      HetimaDataCache cache = new HetimaDataCache(dummy,cacheSize: 3, cacheNum: 3);
+      return cache.write([1,2,3,4], 3).then((WriteResult w) {
+        return cache.read(0, 7);
+      }).then((ReadResult r) {
+        print("--1--");
+        unit.expect(r.buffer, [0,0,0,1,2,3,4]);
+        return cache.flush();
+      }).then((_) {
+        print("--2--");
+        unit.expect(dummy.getBuffer(0, 100), [0,0,0,1,2,3,4]);
+     });
+    });
+    //
   });
 }
