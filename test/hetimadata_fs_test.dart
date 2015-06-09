@@ -7,8 +7,8 @@ void main() {
   unit.group("rba", (){
 
     //
-    unit.test("add", () {
-      HetimaDataFS dataFs = new HetimaDataFS("test");
+    unit.test("add 0", () {
+      HetimaDataFS dataFs = new HetimaDataFS("test",erace:true);
       return dataFs.write([1,2,3], 0).then((WriteResult r) {
         return dataFs.read(0, 3);
       }).then((ReadResult r) {
@@ -17,8 +17,8 @@ void main() {
     });
     
     //
-    unit.test("add", () {
-      HetimaDataFS dataFs = new HetimaDataFS("test");
+    unit.test("add 1", () {
+      HetimaDataFS dataFs = new HetimaDataFS("test",erace:true);
       return dataFs.write([1,2,3], 1).then((WriteResult r) {
         return dataFs.read(0, 4);
       }).then((ReadResult r) {

@@ -23,8 +23,12 @@ class HetimaDataFS extends HetimaData {
   bool get writable => true;
   bool get readable => true;
 
-  HetimaDataFS(String name) {
+  bool _erace = false;
+  bool _persistent = false;
+  HetimaDataFS(String name,{erace:false,persistent:false}) {
     fileName = name;
+    _erace = erace;
+    _persistent = persistent;
   }
 
   HetimaDataFS.fromFile(html.FileEntry fileEntry) {
@@ -42,10 +46,16 @@ class HetimaDataFS extends HetimaData {
       completer.complete(_fileEntry);
       return completer.future;
     }
-    html.window.requestFileSystem(1024).then((html.FileSystem e) {
+    html.window.requestFileSystem(1024,persistent: _persistent).then((html.FileSystem e) {
       e.root.createFile(fileName).then((html.Entry e) {
         _fileEntry = (e as html.FileEntry);
-        completer.complete(_fileEntry);
+        if(_erace == true) {
+          return truncate(0).then((_){
+            completer.complete(_fileEntry);            
+          });
+        } else {
+          completer.complete(_fileEntry);
+        }
       }).catchError((es) {
         completer.complete(null);
       });
@@ -76,11 +86,12 @@ class HetimaDataFS extends HetimaData {
           completer.complete(new WriteResult());
         });
         return getLength().then((int len) {
-          data.Uint8List dummy = new data.Uint8List.fromList([]);
+          data.Uint8List dummy = null;
           if (len < start) {
-            dummy.addAll(new List.filled(start-len, 0));
+            dummy =  new data.Uint8List.fromList(new List.filled(start-len, 0));
             writer.seek(len);
           } else {
+            dummy =  new data.Uint8List.fromList([]);            
             writer.seek(start);
           }
           writer.write(new html.Blob([dummy,buffer]));
