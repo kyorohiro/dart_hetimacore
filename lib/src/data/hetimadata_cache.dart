@@ -24,8 +24,22 @@ class HetimaDataCache extends HetimaData {
 
   bool get writable => true;
   bool get readable => true;
-  int cashLength = 0;
+  int _cashLength = 0;
 
+  static async.Future<HetimaDataCache> createWithReuseCashData(HetimaData cashData, {cacheSize: 1024, cacheNum: 3}) {
+    async.Completer<HetimaDataCache> com = new async.Completer();
+    HetimaDataCache ret = new HetimaDataCache(cashData,cacheSize: cacheSize, cacheNum: cacheNum);
+    ret.getLength().then((int length) {
+      ret._cashLength = length;
+    }).catchError((e){
+      com.completeError(e);
+    });
+    return com.future;
+  }
+  
+  //
+  // if reuse cashData, you must to use HetimaDataCache#create
+  //
   HetimaDataCache(HetimaData cashData, {cacheSize: 1024, cacheNum: 3}) {
     this._cashInfoList = [];
     this._cashData = cashData;
@@ -36,8 +50,8 @@ class HetimaDataCache extends HetimaData {
   async.Future<int> getLength() {
     async.Completer<int> com = new async.Completer();
     _cashData.getLength().then((int len) {
-      if (cashLength > len) {
-        com.complete(cashLength);
+      if (_cashLength > len) {
+        com.complete(_cashLength);
       }
     }).catchError(com.completeError);
     return com.future;
@@ -76,9 +90,9 @@ class HetimaDataCache extends HetimaData {
     async.Completer<WriteResult> com = new async.Completer();
 
     // add 0
-    if(offset > cashLength) {
-      List<int> zero = new List.filled(offset-cashLength, 0);
-      offset = cashLength;
+    if(offset > _cashLength) {
+      List<int> zero = new List.filled(offset-_cashLength, 0);
+      offset = _cashLength;
       buffer.insertAll(0, zero);
     }
 
@@ -103,16 +117,6 @@ class HetimaDataCache extends HetimaData {
 
     return com.future;
   }
-    /*
-  return getCashInfo(start).then((CashInfo ret) {
-      int l = start + buffer.length;
-      if (cashLength < l) {
-        cashLength = l;
-      }
-      return ret.dataBuffer.write(buffer, start - ret.index);
-    });
-    * *
-     */
 
   async.Future<ReadResult> read(int offset, int length) {
     async.Completer<ReadResult> com = new async.Completer();
@@ -123,7 +127,6 @@ class HetimaDataCache extends HetimaData {
       int index = i;
       int next = n = i + (cashSize - (i + cashSize) % cashSize);
       act.add(getCashInfo(index).then((CashInfo ret) {
-//        return ret.dataBuffer.read(offset - ret.index, length - ret.index);
         int l = length;
         if (l > cashSize) {
           l = cashSize;
