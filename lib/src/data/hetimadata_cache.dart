@@ -44,25 +44,6 @@ class HetimaDataCache extends HetimaData {
   }
 
   async.Future<CashInfo> getCashInfo(int startA) {
-    async.Future writeFunc(CashInfo info) {
-      if (info == null) {
-        async.Completer comp = new async.Completer();
-        comp.complete(null);
-        return comp.future;
-      }
-      return info.dataBuffer.getLength().then((int len) {
-        return info.dataBuffer.read(0, len).then((ReadResult r) {
-          return _cashData.write(r.buffer, info.index);
-        });
-      });
-    }
-
-    async.Future readFunc(CashInfo ret) {
-      return _cashData.read(startA, cashSize).then((ReadResult r) {
-        _cashInfoList.add(ret);
-        return ret.dataBuffer.write(r.buffer, 0);
-      });
-    }
 
     async.Completer<CashInfo> com = new async.Completer();
 
@@ -82,8 +63,8 @@ class HetimaDataCache extends HetimaData {
       removeInfo = _cashInfoList.removeAt(0);
     }
 
-    writeFunc(removeInfo).then((WriteResult w) {
-      return readFunc(writeInfo).then((WriteResult r) {
+    _writeFunc(removeInfo).then((WriteResult w) {
+      return _readFunc(writeInfo).then((WriteResult r) {
         com.complete(writeInfo);
       });
     }).catchError((e) {
@@ -109,4 +90,32 @@ class HetimaDataCache extends HetimaData {
   }
 
   void beToReadOnly() {}
+  
+  async.Future _writeFunc(CashInfo info) {
+    if (info == null) {
+      async.Completer comp = new async.Completer();
+      comp.complete(null);
+      return comp.future;
+    }
+    return info.dataBuffer.getLength().then((int len) {
+      return info.dataBuffer.read(0, len).then((ReadResult r) {
+        return _cashData.write(r.buffer, info.index);
+      });
+    });
+  }
+
+  async.Future _readFunc(CashInfo ret) {
+    return _cashData.read(ret.index, cashSize).then((ReadResult r) {
+      _cashInfoList.add(ret);
+      return ret.dataBuffer.write(r.buffer, 0);
+    });
+  }
+
+  async.Future<dynamic> flush() {
+    List<async.Future> act = [];
+    for (CashInfo c in _cashInfoList) {
+      act.add(_writeFunc(c));
+    }
+    return async.Future.wait(act);
+  }
 }
