@@ -101,5 +101,20 @@ void main() {
      });
     });
     //
+    //
+    unit.test("hetimadata_cache 7: init", () {
+      HetimaDataMemory dummy = new HetimaDataMemory();
+      HetimaDataCache cache = new HetimaDataCache(dummy,cacheSize: 3, cacheNum: 3);
+      return cache.write([], 4).then((WriteResult w) {
+        return cache.read(0, 4);
+      }).then((ReadResult r) {
+        print("--1--");
+        unit.expect(r.buffer, [0,0,0,0]);
+        return cache.flush();
+      }).then((_) {
+        print("--2--");
+        unit.expect(dummy.getBuffer(0, 100), [0,0,0,0]);
+     });
+    });
   });
 }
