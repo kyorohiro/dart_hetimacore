@@ -17,6 +17,8 @@ class ArrayBuilder extends HetimaReader {
   async.Completer completer = new async.Completer();
   List<GetByteFutureInfo> mGetByteFutreList = new List();
 
+  int get clearedBuffer => _buffer8.clearedBuffer;
+
   ArrayBuilder() {
     _buffer8 = new ArrayBuilderBuffer(_max); //new data.Uint8List(_max);
   }

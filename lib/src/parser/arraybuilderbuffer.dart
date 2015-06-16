@@ -8,6 +8,8 @@ class ArrayBuilderBuffer {
   int _clearedBuffer = 0;
   List<int> _buffer8 = null;
 
+  int get clearedBuffer => _clearedBuffer;
+
   ArrayBuilderBuffer(int max) {
     _buffer8 = new data.Uint8List(max);
   }
