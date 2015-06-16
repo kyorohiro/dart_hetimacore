@@ -1,4 +1,5 @@
 library hetimacore.array;
+
 import 'dart:typed_data' as data;
 import 'dart:math' as math;
 import 'dart:convert' as convert;
@@ -8,20 +9,21 @@ import 'hetimareader.dart';
 
 class ArrayBuilder extends HetimaReader {
   int _max = 1024;
-  List<int> _buffer8;
+//  List<int> _buffer8;
+  ArrayBuilderBuffer _buffer8;
   int _length = 0;
 
   async.Completer completer = new async.Completer();
   List<GetByteFutureInfo> mGetByteFutreList = new List();
 
   ArrayBuilder() {
-    _buffer8 = new data.Uint8List(_max);
+    _buffer8 = new ArrayBuilderBuffer(_max);//new data.Uint8List(_max);
   }
 
-  ArrayBuilder.fromList(List<int> buffer,[isFin = false]) {
-    _buffer8 = buffer;
+  ArrayBuilder.fromList(List<int> buffer, [isFin = false]) {
+    _buffer8 = new ArrayBuilderBuffer.fromList(buffer);
     _length = buffer.length;
-    if(isFin == true) {
+    if (isFin == true) {
       fin();
     }
   }
@@ -39,7 +41,6 @@ class ArrayBuilder extends HetimaReader {
     for (index; index < size() && index < (length + v); index++) {
       info.completerResult.add(get(index));
     }
-
 
     if ((info.completerResultLength <= info.completerResult.length) || (immutable)) {
       completer.complete(info.completerResult);
@@ -75,13 +76,7 @@ class ArrayBuilder extends HetimaReader {
       return;
     } else {
       int nextMax = _length + plusLength + _max;
-      data.Uint8List next = new data.Uint8List(nextMax);
-      for (int i = 0; i < _length; i++) {
-        next[i] = _buffer8[i];
-      }
-      // _buffer8.clear();
-      _buffer8 = null;
-      _buffer8 = next;
+      _buffer8.expand(nextMax);
       _max = nextMax;
     }
   }
@@ -157,10 +152,48 @@ class ArrayBuilder extends HetimaReader {
   String toText() {
     return convert.UTF8.decode(toList());
   }
-
 }
 
 class GetByteFutureInfo {
   List<int> completerResult = new List();
   int completerResultLength = 0;
+}
+
+
+class ArrayBuilderBuffer {
+
+  List<int> _buffer8 = null;
+  int _length = 0;
+
+  ArrayBuilderBuffer(int max) {
+    _buffer8 = new data.Uint8List(max);
+  }
+
+  ArrayBuilderBuffer.fromList(List<int> buffer) {
+    _buffer8 = buffer;
+    _length = buffer.length;
+  }
+
+  int operator [](int index) {
+    return _buffer8[index];
+  }
+
+  void operator []=(int index, int value) {
+    _buffer8[index] = value;
+  }
+
+  List<int> sublist(int start, int end) {
+    return _buffer8.sublist(start, end);
+  }
+
+  void expand(int nextMax) {
+    data.Uint8List next = new data.Uint8List(nextMax);
+    for (int i = 0; i < _length; i++) {
+      next[i] = _buffer8[i];
+    }
+    // _buffer8.clear();
+    _buffer8 = null;
+    _buffer8 = next;
+  }
+  int get length => _buffer8.length;
 }
