@@ -63,9 +63,9 @@ void main() {
     buffer[2] = 3;
     try {
       buffer[3] = 4;
-      unit.expect(true,false);
-    } catch(e) {
-      unit.expect(true,true);
+      unit.expect(true, false);
+    } catch (e) {
+      unit.expect(true, true);
     }
     buffer.expand(5);
     buffer[3] = 4;
