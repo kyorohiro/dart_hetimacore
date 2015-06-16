@@ -72,7 +72,7 @@ void main() {
     unit.expect(4, buffer[3]);
     unit.expect(5, buffer[4]);
     unit.expect(5, buffer.length);
-    
+
     buffer.expand(10);
     buffer.clearInnerBuffer(4);
     unit.expect(0, buffer[0]);
@@ -81,7 +81,7 @@ void main() {
     unit.expect(0, buffer[3]);
     unit.expect(5, buffer[4]);
     unit.expect(10, buffer.length);
-    
+
     buffer[4] = 5;
     buffer[5] = 6;
     buffer[6] = 7;
@@ -94,9 +94,13 @@ void main() {
     unit.expect(8, buffer[7]);
     unit.expect(9, buffer[8]);
     unit.expect(10, buffer[9]);
-
+    
+    unit.expect([0,0,0,0,5,6,7,8,9,10], buffer.sublist(0, 10));
+    unit.expect([0,0,5,6,7,8,9], buffer.sublist(2, 9));
+    unit.expect([9], buffer.sublist(8, 9));
+    unit.expect([], buffer.sublist(8, 8));
   });
-  
+
   unit.test("ArrayBuilderBuffer: ", () {
     hetima.ArrayBuilderBuffer buffer = new hetima.ArrayBuilderBuffer(3);
     unit.expect(3, buffer.length);
@@ -116,6 +120,5 @@ void main() {
     unit.expect(2, buffer[1]);
     unit.expect(5, buffer[4]);
     unit.expect(5, buffer.length);
-    
   });
 }
