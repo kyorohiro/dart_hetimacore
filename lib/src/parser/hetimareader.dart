@@ -33,6 +33,10 @@ abstract class HetimaReader {
     }
   }
 
+  void clearInnerBuffer(int len) {
+    ;
+  }
+
 }
 
 class HetimaReaderAdapter extends HetimaReader {
