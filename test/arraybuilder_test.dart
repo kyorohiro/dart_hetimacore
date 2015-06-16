@@ -55,6 +55,26 @@ void main() {
   });
 
   unit.test("ArrayBuilderBuffer: ", () {
+    hetima.ArrayBuilderBuffer buffer = new hetima.ArrayBuilderBuffer(5);
+    unit.expect(5, buffer.length);
+
+    buffer[0] = 1;
+    buffer[1] = 2;
+    buffer[2] = 3;
+    buffer[3] = 4;
+    buffer[4] = 5;
+
+    buffer.clearInnerBuffer(3);
+
+    unit.expect(0, buffer[0]);
+    unit.expect(0, buffer[1]);
+    unit.expect(0, buffer[2]);
+    unit.expect(4, buffer[3]);
+    unit.expect(5, buffer[4]);
+    unit.expect(5, buffer.length);
+  });
+  
+  unit.test("ArrayBuilderBuffer: ", () {
     hetima.ArrayBuilderBuffer buffer = new hetima.ArrayBuilderBuffer(3);
     unit.expect(3, buffer.length);
 

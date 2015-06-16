@@ -173,7 +173,7 @@ class ArrayBuilderBuffer {
 
   int operator [](int index) {
     int i = index - _clearedBuffer;
-    if (i > 0) {
+    if (i >= 0) {
       return _buffer8[index - _clearedBuffer];
     } else {
       return 0;
@@ -182,7 +182,7 @@ class ArrayBuilderBuffer {
 
   void operator []=(int index, int value) {
     int i = index - _clearedBuffer;
-    if (i > 0) {
+    if (i >= 0) {
       _buffer8[i] = value;
     }
   }
