@@ -72,6 +72,29 @@ void main() {
     unit.expect(4, buffer[3]);
     unit.expect(5, buffer[4]);
     unit.expect(5, buffer.length);
+    
+    buffer.expand(10);
+    buffer.clearInnerBuffer(4);
+    unit.expect(0, buffer[0]);
+    unit.expect(0, buffer[1]);
+    unit.expect(0, buffer[2]);
+    unit.expect(0, buffer[3]);
+    unit.expect(5, buffer[4]);
+    unit.expect(10, buffer.length);
+    
+    buffer[4] = 5;
+    buffer[5] = 6;
+    buffer[6] = 7;
+    buffer[7] = 8;
+    buffer[8] = 9;
+    buffer[9] = 10;
+    unit.expect(5, buffer[4]);
+    unit.expect(6, buffer[5]);
+    unit.expect(7, buffer[6]);
+    unit.expect(8, buffer[7]);
+    unit.expect(9, buffer[8]);
+    unit.expect(10, buffer[9]);
+
   });
   
   unit.test("ArrayBuilderBuffer: ", () {
@@ -93,5 +116,6 @@ void main() {
     unit.expect(2, buffer[1]);
     unit.expect(5, buffer[4]);
     unit.expect(5, buffer.length);
+    
   });
 }
