@@ -163,7 +163,6 @@ class GetByteFutureInfo {
 class ArrayBuilderBuffer {
 
   List<int> _buffer8 = null;
-  int _length = 0;
 
   ArrayBuilderBuffer(int max) {
     _buffer8 = new data.Uint8List(max);
@@ -171,7 +170,6 @@ class ArrayBuilderBuffer {
 
   ArrayBuilderBuffer.fromList(List<int> buffer) {
     _buffer8 = buffer;
-    _length = buffer.length;
   }
 
   int operator [](int index) {
@@ -188,12 +186,13 @@ class ArrayBuilderBuffer {
 
   void expand(int nextMax) {
     data.Uint8List next = new data.Uint8List(nextMax);
-    for (int i = 0; i < _length; i++) {
+    for (int i = 0; i < _buffer8.length; i++) {
       next[i] = _buffer8[i];
     }
     // _buffer8.clear();
     _buffer8 = null;
     _buffer8 = next;
   }
+
   int get length => _buffer8.length;
 }
