@@ -61,6 +61,10 @@ class ArrayBuilder extends HetimaReader {
     _length = 0;
   }
 
+  void clearInnerBuffer(int len) {
+    _buffer8.clearInnerBuffer(len);  
+  }
+
   int size() {
     return _length;
   }
@@ -188,7 +192,17 @@ class ArrayBuilderBuffer {
   }
 
   List<int> sublist(int start, int end) {
-    return _buffer8.sublist(start - _clearedBuffer, end - _clearedBuffer);
+    List<int> ret = [];
+    {
+      int s = start-_clearedBuffer;
+      int e = end-_clearedBuffer;
+      if(s<0) {
+        ret.addAll(new List.filled(-1*s, 0));
+        s=0;
+      }      
+      ret.addAll(_buffer8.sublist(s, e));
+    }
+    return ret;
   }
 
   void clearInnerBuffer(int len) {
