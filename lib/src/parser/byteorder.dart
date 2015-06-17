@@ -51,7 +51,7 @@ abstract class ByteOrder {
   }
 
   static List<int> parseShortByte(int value, int byteorder) {
-    List<int> ret = new List(4);
+    List<int> ret = new List(2);
     if (byteorder == BYTEORDER_BIG_ENDIAN) {
       ret[0] = (value >> 8 & 0xff);
       ret[1] = (value >> 0 & 0xff);
