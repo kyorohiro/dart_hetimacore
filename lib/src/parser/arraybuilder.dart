@@ -141,8 +141,11 @@ class ArrayBuilder extends HetimaReader {
     }
   }
 
-  void appendIntList(List<int> buffer, int index, int length) {
+  void appendIntList(List<int> buffer,[ int index=0, int length=-1]) {
     update(length);
+    if(length<0) {
+      length = buffer.length;
+    }
     for (int i = 0; i < length; i++) {
       appendByte(buffer[index + i]);
     }
