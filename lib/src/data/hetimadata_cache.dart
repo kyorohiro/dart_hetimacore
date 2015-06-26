@@ -73,6 +73,7 @@ class HetimaDataCache extends HetimaData {
       }
     }
 
+    print("###############################dd");
     CashInfo removeInfo = null;
     CashInfo writeInfo = new CashInfo(startA - startA % cashSize, cashSize);
 
@@ -175,6 +176,7 @@ class HetimaDataCache extends HetimaData {
   }
 
   async.Future<dynamic> flush() {
+    print("###############################ff");
     List<async.Future> act = [];
     for (CashInfo c in _cashInfoList) {
       act.add(_writeFunc(c));
