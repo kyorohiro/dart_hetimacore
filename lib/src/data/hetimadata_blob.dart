@@ -38,7 +38,7 @@ class HetimaDataBlob extends HetimaData {
     async.StreamSubscription b = null;
     async.StreamSubscription c = null;
     html.FileReader reader = new html.FileReader();
-      reader.onLoad.listen((html.ProgressEvent e) {
+    a = reader.onLoadEnd.listen((html.ProgressEvent e) {
       ret.complete(new ReadResult(ReadResult.OK, reader.result));
       a.cancel();
       b.cancel();
