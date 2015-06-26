@@ -65,6 +65,7 @@ class HetimaDataCache extends HetimaData {
     async.Completer<CashInfo> com = new async.Completer();
 
     for (CashInfo c in _cashInfoList) {
+      print("#### ${c.index} <= ${startA} && ${startA} < ${(c.index + c.length)}");
       if (c.index <= startA && startA < (c.index + c.length)) {
         _cashInfoList.remove(c);
         _cashInfoList.add(c);
