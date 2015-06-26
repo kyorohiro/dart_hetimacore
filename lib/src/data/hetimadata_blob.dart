@@ -31,18 +31,23 @@ class HetimaDataBlob extends HetimaData {
     return _mWriter.write(o, start);
   }
 
-  html.FileReader reader = new html.FileReader();
+
   async.Future<ReadResult> read(int offset, int length) {
     async.Completer<ReadResult> ret = new async.Completer<ReadResult>();
     async.StreamSubscription a = null;
     async.StreamSubscription b = null;
     async.StreamSubscription c = null;
-
+    html.FileReader reader = new html.FileReader();
     a = reader.onLoadEnd.listen((html.ProgressEvent e) {
       ret.complete(new ReadResult(ReadResult.OK, reader.result));
       a.cancel();
       b.cancel();
       c.cancel();
+      reader = null;
+      a = null;
+      b = null;
+      c = null;
+      ret = null;
     });
     b = reader.onError.listen((html.Event e) {
       print("read error : ${e}");
