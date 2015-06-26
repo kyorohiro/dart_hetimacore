@@ -9,7 +9,7 @@ class CashInfo {
   int index = 0;
   int length = 0;
   HetimaDataMemory dataBuffer = null;
-  bool isWrite = false;//kiyo
+  bool isWrite = false; //kiyo
   CashInfo(int index, int length) {
     this.index = index;
     this.length = length;
@@ -29,16 +29,16 @@ class HetimaDataCache extends HetimaData {
 
   static async.Future<HetimaDataCache> createWithReuseCashData(HetimaData cashData, {cacheSize: 1024, cacheNum: 3}) {
     async.Completer<HetimaDataCache> com = new async.Completer();
-    HetimaDataCache ret = new HetimaDataCache(cashData,cacheSize: cacheSize, cacheNum: cacheNum);
+    HetimaDataCache ret = new HetimaDataCache(cashData, cacheSize: cacheSize, cacheNum: cacheNum);
     ret.getLength().then((int length) {
       ret._cashLength = length;
       com.complete(ret);
-    }).catchError((e){
+    }).catchError((e) {
       com.completeError(e);
     });
     return com.future;
   }
-  
+
   //
   // if reuse cashData, you must to use HetimaDataCache#create
   //
@@ -97,8 +97,8 @@ class HetimaDataCache extends HetimaData {
     async.Completer<WriteResult> com = new async.Completer();
 
     // add 0
-    if(offset > _cashLength) {
-      List<int> zero = new List.filled(offset-_cashLength, 0);
+    if (offset > _cashLength) {
+      List<int> zero = new List.filled(offset - _cashLength, 0);
       offset = _cashLength;
       buffer.insertAll(0, zero);
     }
@@ -111,11 +111,11 @@ class HetimaDataCache extends HetimaData {
       int index = i;
       int next = n = i + (cashSize - (i + cashSize) % cashSize);
       act.add(getCashInfo(index).then((CashInfo ret) {
-        if(next-offset > buffer.length) {
+        if (next - offset > buffer.length) {
           next = buffer.length + offset;
         }
-        ret.isWrite = true;//kiyo
-        return ret.dataBuffer.write(buffer.sublist(index-offset, next-offset), index - ret.index);
+        ret.isWrite = true; //kiyo
+        return ret.dataBuffer.write(buffer.sublist(index - offset, next - offset), index - ret.index);
       }));
     }
 
@@ -127,6 +127,7 @@ class HetimaDataCache extends HetimaData {
   }
 
   async.Future<ReadResult> read(int offset, int length) {
+    print("###############################jj ${offset} ${length}");
     async.Completer<ReadResult> com = new async.Completer();
     List<async.Future> act = [];
 
@@ -153,8 +154,8 @@ class HetimaDataCache extends HetimaData {
   void beToReadOnly() {}
 
   async.Future _writeFunc(CashInfo info) {
-    
-    if (info == null || info.isWrite == false) {///kiyo
+    if (info == null || info.isWrite == false) {
+      ///kiyo
       async.Completer comp = new async.Completer();
       comp.complete(null);
       return comp.future;
@@ -168,11 +169,11 @@ class HetimaDataCache extends HetimaData {
 
   async.Future _readFunc(CashInfo ret) {
     // kiyokiyo
-    return new async.Future((){
-    return _cashData.read(ret.index, cashSize).then((ReadResult r) {
-      _cashInfoList.add(ret);
-      return ret.dataBuffer.write(r.buffer, 0);
-    });
+    return new async.Future(() {
+      return _cashData.read(ret.index, cashSize).then((ReadResult r) {
+        _cashInfoList.add(ret);
+        return ret.dataBuffer.write(r.buffer, 0);
+      });
     });
   }
 
