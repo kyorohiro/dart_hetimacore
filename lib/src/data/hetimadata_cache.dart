@@ -9,6 +9,7 @@ class CashInfo {
   int index = 0;
   int length = 0;
   HetimaDataMemory dataBuffer = null;
+  bool isWrite = false;//kiyo
   CashInfo(int index, int length) {
     this.index = index;
     this.length = length;
@@ -111,6 +112,7 @@ class HetimaDataCache extends HetimaData {
         if(next-offset > buffer.length) {
           next = buffer.length + offset;
         }
+        ret.isWrite = true;//kiyo
         return ret.dataBuffer.write(buffer.sublist(index-offset, next-offset), index - ret.index);
       }));
     }
@@ -150,7 +152,7 @@ class HetimaDataCache extends HetimaData {
 
   async.Future _writeFunc(CashInfo info) {
     
-    if (info == null) {
+    if (info == null || info.isWrite == false) {///kiyo
       async.Completer comp = new async.Completer();
       comp.complete(null);
       return comp.future;
