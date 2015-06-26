@@ -38,9 +38,11 @@ class HetimaDataBlob extends HetimaData {
       ret.complete(new ReadResult(ReadResult.OK, reader.result));
     });
     reader.onError.listen((html.Event e) {
+      print("read error : ${e}");
       ret.complete(new ReadResult(ReadResult.NG, null));
     });
     reader.onAbort.listen((html.ProgressEvent e) {
+      print("read abort : ${e}");
       ret.complete(new ReadResult(ReadResult.NG, null));
     });
     reader.readAsArrayBuffer(_mBlob.slice(offset, offset+length));
