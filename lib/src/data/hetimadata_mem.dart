@@ -12,9 +12,9 @@ class HetimaDataMemory extends HetimaData {
   List<int> _dataBuffer = null;
   HetimaDataMemory([List<int> buffer=null]) {
     if(buffer != null) {
-      _dataBuffer = new Uint8List.fromList(buffer);//(0);new List.from(buffer);
+      _dataBuffer = new List.from(buffer);
     } else {
-      _dataBuffer = new Uint8List(0);      
+      _dataBuffer = [];      
     }
   }
 
