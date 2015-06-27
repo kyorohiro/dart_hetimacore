@@ -133,6 +133,7 @@ class HetimaDataCache extends HetimaData {
 
     int n = 0;
     for (int i = offset; i < (offset + length); i = n) {
+      print("###############################jD ${i} < ${offset} ${length}");
       int index = i;
       int next = n = i + (cashSize - (i + cashSize) % cashSize);
       act.add(getCashInfo(index).then((CashInfo ret) {
