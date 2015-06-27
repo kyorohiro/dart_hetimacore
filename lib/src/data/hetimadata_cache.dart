@@ -175,7 +175,7 @@ class HetimaDataCache extends HetimaData {
       return _cashData.read(ret.index, cashSize).then((ReadResult r) {
         _cashInfoList.add(ret);
         int timeD = new DateTime.now().millisecondsSinceEpoch;
-        print("Nnn ${timeD}");
+        print("Nnn ${timeD-timeC}");
         return ret.dataBuffer.write(r.buffer, 0);
       });
     });
