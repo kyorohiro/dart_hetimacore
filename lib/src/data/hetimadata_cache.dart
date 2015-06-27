@@ -74,7 +74,7 @@ class HetimaDataCache extends HetimaData {
       }
     }
 
-    print("###############################dd ${_cashInfoList.length}");
+    print("###############################dd ${_cashInfoList.length} ${cashNum}");
     CashInfo removeInfo = null;
     CashInfo writeInfo = new CashInfo(startA - startA % cashSize, cashSize);
 
