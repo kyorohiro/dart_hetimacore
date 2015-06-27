@@ -156,11 +156,12 @@ class HetimaDataCache extends HetimaData {
     async.Future.wait(act).then((List<ReadResult> rl) {
       int timeD = new DateTime.now().millisecondsSinceEpoch;
       print("Nnn ${timeD-timeC}");
-      List<int> _buffer = [];
-      for (ReadResult r in rl) {
-        _buffer.addAll(r.buffer);
-      }
-      ReadResult r = new ReadResult(ReadResult.OK, _buffer);
+      //List<int> _buffer = [];
+      //for (ReadResult r in rl) {
+      //  _buffer.addAll(r.buffer);
+     // }
+     //ReadResult r = new ReadResult(ReadResult.OK, _buffer);
+      ReadResult r = new ReadResult(ReadResult.OK, rl[0].buffer);
       com.complete(r);
     });
     return com.future;
