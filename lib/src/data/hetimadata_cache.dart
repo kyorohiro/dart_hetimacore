@@ -184,10 +184,16 @@ class HetimaDataCache extends HetimaData {
       }
 
       return async.Future.wait(act).then((List<ReadResult> rl) {
+        //
+        // buffer length
         int length = 0;
         for (ReadResult r in rl) {
           length += r.length;
         }
+        
+        
+        //
+        // buffer
         List<int> _buffer = null;
         if (_buffer == null || tmp.length < length) {
           _buffer = new List(length);
@@ -201,54 +207,13 @@ class HetimaDataCache extends HetimaData {
           _buffer.setAll(s, r.buffer);
           s = e;
         }
+        
+        // end
         return new ReadResult(ReadResult.OK, _buffer, length);
       });
     }
   }
 
-/*
-  async.Future<ReadResult> read(int offset, int length, {List<int> tmp:null}){
- //   print("###############################jj ${offset} ${length}");
-    async.Completer<ReadResult> com = new async.Completer();
-    List<async.Future> act = [];
-
-    int n = 0;
-    for (int i = offset; i < (offset + length); i = n) {
-   //   print("###############################jD ${i} < ${offset} ${length}");
-      int index = i;
-      int next = n = i + (cashSize - (i + cashSize) % cashSize);
-      act.add(getCashInfo(index).then((CashInfo ret) {
-        return ret.dataBuffer.read(index - ret.index, next - index);
-      }));
-    }
-//    int timeC = new DateTime.now().millisecondsSinceEpoch;
-    async.Future.wait(act).then((List<ReadResult> rl) {
-//      int timeD = new DateTime.now().millisecondsSinceEpoch;
- //     print("Nnn ${timeD-timeC}");
-
-      int length = 0;
-      for (ReadResult r in rl) {
-        length += r.length;
-      }
-      List<int> _buffer = null;
-      if(_buffer == null || tmp.length < length) {
-        _buffer = new List(length);
-      } else {
-        _buffer = tmp;
-      }
-      int s = 0;
-      int e = 0;
-      for (ReadResult r in rl) {
-         e = s+r.length;
-         _buffer.setAll(s, r.buffer);
-         s = e;
-      }
-      ReadResult r = new ReadResult(ReadResult.OK, _buffer, length);
-      com.complete(r);
-    });
-    return com.future;
-  }
-*/
   void beToReadOnly() {}
 
   async.Future _writeFunc(CashInfo info) {
@@ -281,12 +246,10 @@ class HetimaDataCache extends HetimaData {
   async.Future _readFunc(CashInfo ret) {
     // kiyokiyo
     return new async.Future(() {
-//      int timeC = new DateTime.now().millisecondsSinceEpoch;
       return _cashData.read(ret.index, cashSize).then((ReadResult r) {
-        _cashInfoList.add(ret);
-        //       int timeD = new DateTime.now().millisecondsSinceEpoch;
-//        print("Nnn ${timeD-timeC}");
-        return ret.dataBuffer.write(r.buffer, 0);
+        return ret.dataBuffer.write(r.buffer, 0).then((WriteResult r) {
+          _cashInfoList.add(ret);          
+        });
       });
     });
   }
