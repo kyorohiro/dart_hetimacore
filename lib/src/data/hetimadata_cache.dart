@@ -83,11 +83,6 @@ class HetimaDataCache extends HetimaData {
       removeInfo = _cashInfoList.removeAt(0);
     }
 
-    if(removeInfo == null || removeInfo.isWrite == false) {
-       _readFunc(writeInfo).then((WriteResult r) {
-        com.complete(writeInfo);
-      });
-    } else {
     _writeFunc(removeInfo).then((WriteResult w) {
       return _readFunc(writeInfo).then((WriteResult r) {
         com.complete(writeInfo);
@@ -95,7 +90,6 @@ class HetimaDataCache extends HetimaData {
     }).catchError((e) {
       com.completeError(e);
     });
-    }
     return com.future;
   }
 
@@ -177,8 +171,11 @@ class HetimaDataCache extends HetimaData {
   async.Future _readFunc(CashInfo ret) {
     // kiyokiyo
     return new async.Future(() {
+      int timeC = new DateTime.now().millisecondsSinceEpoch;
       return _cashData.read(ret.index, cashSize).then((ReadResult r) {
         _cashInfoList.add(ret);
+        int timeD = new DateTime.now().millisecondsSinceEpoch;
+        print("Nnn ${timeD}");
         return ret.dataBuffer.write(r.buffer, 0);
       });
     });
