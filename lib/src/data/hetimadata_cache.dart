@@ -138,13 +138,11 @@ class HetimaDataCache extends HetimaData {
   }
 
   async.Future<ReadResult> read(int offset, int length, {List<int> tmp: null}) {
-
-
     List<int> indexList = [];
     List<int> nextList = [];
-    
+
     //
-    // search cache 
+    // search cache
     {
       int n = 0;
       for (int i = offset; i < (offset + length); i = n) {
@@ -156,14 +154,14 @@ class HetimaDataCache extends HetimaData {
     }
 
     //
-    //
+    // zero
     if (indexList.length == 0) {
-      return new async.Future((){
+      return new async.Future(() {
         return new ReadResult(ReadResult.OK, []);
       });
     }
     //
-    // first access
+    // one
     else if (indexList.length == 1) {
       int index = indexList[0];
       int next = nextList[0];
@@ -171,11 +169,11 @@ class HetimaDataCache extends HetimaData {
         return info.dataBuffer.read(index - info.index, next - index);
       });
     }
-    
+
     //
-    //
+    // other
     else {
-      async.Completer<ReadResult> com = new async.Completer();
+      // async.Completer<ReadResult> com = new async.Completer();
       List<async.Future> act = [];
       for (int i = 0; i < indexList.length; i++) {
         int index = indexList[i];
@@ -184,7 +182,7 @@ class HetimaDataCache extends HetimaData {
           return ret.dataBuffer.read(index - ret.index, next - index);
         }));
       }
-      async.Future.wait(act).then((List<ReadResult> rl) {
+      return async.Future.wait(act).then((List<ReadResult> rl) {
         int length = 0;
         for (ReadResult r in rl) {
           length += r.length;
@@ -202,12 +200,9 @@ class HetimaDataCache extends HetimaData {
           _buffer.setAll(s, r.buffer);
           s = e;
         }
-        ReadResult r = new ReadResult(ReadResult.OK, _buffer, length);
-        com.complete(r);
+        return new ReadResult(ReadResult.OK, _buffer, length);
       });
-      return com.future;
     }
-
   }
 
 /*
