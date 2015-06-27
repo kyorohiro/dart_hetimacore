@@ -65,7 +65,7 @@ class HetimaDataCache extends HetimaData {
     async.Completer<CashInfo> com = new async.Completer();
 
     for (CashInfo c in _cashInfoList) {
-    //  print("#### ${c.index} <= ${startA} && ${startA} < ${(c.index + c.length)}");
+      print("#### ${c.index} <= ${startA} && ${startA} < ${(c.index + c.length)}");
       if (c.index <= startA && startA < (c.index + c.length)) {
         _cashInfoList.remove(c);
         _cashInfoList.add(c);
@@ -74,7 +74,7 @@ class HetimaDataCache extends HetimaData {
       }
     }
 
-    //print("###############################dd ${_cashInfoList.length}");
+    print("###############################dd ${_cashInfoList.length}");
     CashInfo removeInfo = null;
     CashInfo writeInfo = new CashInfo(startA - startA % cashSize, cashSize);
 
@@ -127,7 +127,7 @@ class HetimaDataCache extends HetimaData {
   }
 
   async.Future<ReadResult> read(int offset, int length) {
-//    print("###############################jj ${offset} ${length}");
+    print("###############################jj ${offset} ${length}");
     async.Completer<ReadResult> com = new async.Completer();
     List<async.Future> act = [];
 
@@ -178,7 +178,7 @@ class HetimaDataCache extends HetimaData {
   }
 
   async.Future<dynamic> flush() {
-  // print("###############################ff");
+   print("###############################ff");
     List<async.Future> act = [];
     for (CashInfo c in _cashInfoList) {
       act.add(_writeFunc(c));
