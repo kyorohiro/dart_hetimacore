@@ -173,7 +173,7 @@ class HetimaDataCache extends HetimaData {
     //
     // other
     else {
-      // async.Completer<ReadResult> com = new async.Completer();
+
       List<async.Future> act = [];
       for (int i = 0; i < indexList.length; i++) {
         int index = indexList[i];
@@ -182,6 +182,7 @@ class HetimaDataCache extends HetimaData {
           return ret.dataBuffer.read(index - ret.index, next - index);
         }));
       }
+
       return async.Future.wait(act).then((List<ReadResult> rl) {
         int length = 0;
         for (ReadResult r in rl) {
