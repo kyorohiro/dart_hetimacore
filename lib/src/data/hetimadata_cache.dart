@@ -138,11 +138,13 @@ class HetimaDataCache extends HetimaData {
   }
 
   async.Future<ReadResult> read(int offset, int length, {List<int> tmp: null}) {
-    async.Completer<ReadResult> com = new async.Completer();
-    List<async.Future> act = [];
+
 
     List<int> indexList = [];
     List<int> nextList = [];
+    
+    //
+    // search cache 
     {
       int n = 0;
       for (int i = offset; i < (offset + length); i = n) {
@@ -153,15 +155,28 @@ class HetimaDataCache extends HetimaData {
       }
     }
 
-    if (indexList.length == 1) {
+    //
+    //
+    if (indexList.length == 0) {
+      return new async.Future((){
+        return new ReadResult(ReadResult.OK, []);
+      });
+    }
+    //
+    // first access
+    else if (indexList.length == 1) {
       int index = indexList[0];
       int next = nextList[0];
-      getCashInfo(indexList[0]).then((CashInfo info) {
-        info.dataBuffer.read(index - info.index, next - index).then((ReadResult r) {
-          com.complete(r);          
-        });
+      return getCashInfo(indexList[0]).then((CashInfo info) {
+        return info.dataBuffer.read(index - info.index, next - index);
       });
-    } else {
+    }
+    
+    //
+    //
+    else {
+      async.Completer<ReadResult> com = new async.Completer();
+      List<async.Future> act = [];
       for (int i = 0; i < indexList.length; i++) {
         int index = indexList[i];
         int next = nextList[i];
@@ -190,8 +205,9 @@ class HetimaDataCache extends HetimaData {
         ReadResult r = new ReadResult(ReadResult.OK, _buffer, length);
         com.complete(r);
       });
+      return com.future;
     }
-    return com.future;
+
   }
 
 /*
