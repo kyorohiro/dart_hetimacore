@@ -170,7 +170,11 @@ class HetimaDataCache extends HetimaData {
     if (info == null || info._isWrite == false) {
       ///kiyo
       async.Completer comp = new async.Completer();
-      if(_gomiInfoList.length == 0) {
+      //
+      //
+      //
+      if(_gomiInfoList.length == 0&& info != null) {
+        info._isWrite = false;
         _gomiInfoList.add(info);
       }
       comp.complete(null);
@@ -178,7 +182,13 @@ class HetimaDataCache extends HetimaData {
     }
     return info.dataBuffer.getLength().then((int len) {
       return info.dataBuffer.read(0, len).then((ReadResult r) {
-        return _cashData.write(r.buffer, info.index);
+        return _cashData.write(r.buffer, info.index).then((WriteResult r){
+          if(_gomiInfoList.length == 0&& info != null) {
+            info._isWrite = false;
+            _gomiInfoList.add(info);
+          }
+          return r;
+        });
       });
     });
   }
