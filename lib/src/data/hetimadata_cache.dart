@@ -9,15 +9,22 @@ class CashInfo {
   int index = 0;
   int length = 0;
   HetimaDataMemory dataBuffer = null;
-  bool isWrite = false; //kiyo
+  bool _isWrite = false; //kiyo
   CashInfo(int index, int length) {
     this.index = index;
     this.length = length;
     this.dataBuffer = new HetimaDataMemory();
   }
+
+  _setV(int index, int length) {
+    this.index = index;
+    this.length = length;
+  }
+    
 }
 
 class HetimaDataCache extends HetimaData {
+  List<CashInfo> _gomiInfoList = [];
   List<CashInfo> _cashInfoList = [];
   HetimaData _cashData = null;
   int cashSize = 1024;
@@ -67,10 +74,8 @@ class HetimaDataCache extends HetimaData {
     for (CashInfo c in _cashInfoList) {
       print("#### ${c.index} <= ${startA} && ${startA} < ${(c.index + c.length)}");
       if (c.index <= startA && startA < (c.index + c.length)) {
-        if(!_cashInfoList.contains(c)) {
-//          _cashInfoList.remove(c);
-          _cashInfoList.add(c);          
-        }
+        _cashInfoList.remove(c);
+        _cashInfoList.add(c);
         com.complete(c);
         return com.future;
       }
@@ -78,8 +83,13 @@ class HetimaDataCache extends HetimaData {
 
     print("###############################dd ${_cashInfoList.length} ${cashNum}");
     CashInfo removeInfo = null;
-    CashInfo writeInfo = new CashInfo(startA - startA % cashSize, cashSize);
-
+    CashInfo writeInfo = null;
+    if(_gomiInfoList.length > 0) {
+      writeInfo =  _gomiInfoList.removeLast();
+      writeInfo._setV(startA - startA % cashSize, cashSize);
+    } else {
+      writeInfo =  new CashInfo(startA - startA % cashSize, cashSize);
+    }
     // not found
     if (_cashInfoList.length >= cashNum) {
       removeInfo = _cashInfoList.removeAt(0);
@@ -116,7 +126,7 @@ class HetimaDataCache extends HetimaData {
         if (next - offset > buffer.length) {
           next = buffer.length + offset;
         }
-        ret.isWrite = true; //kiyo
+        ret._isWrite = true; //kiyo
         return ret.dataBuffer.write(buffer.sublist(index - offset, next - offset), index - ret.index);
       }));
     }
@@ -157,9 +167,12 @@ class HetimaDataCache extends HetimaData {
   void beToReadOnly() {}
 
   async.Future _writeFunc(CashInfo info) {
-    if (info == null || info.isWrite == false) {
+    if (info == null || info._isWrite == false) {
       ///kiyo
       async.Completer comp = new async.Completer();
+      if(_gomiInfoList.length == 0) {
+        _gomiInfoList.add(info);
+      }
       comp.complete(null);
       return comp.future;
     }
