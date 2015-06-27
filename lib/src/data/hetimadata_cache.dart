@@ -169,7 +169,7 @@ class HetimaDataCache extends HetimaData {
       int e = 0;
       for (ReadResult r in rl) {
          e = s+r.length;
-        _buffer.setRange(s, e, r.buffer);
+         _buffer.setAll(s, r.buffer);
          s = e;
       }
       ReadResult r = new ReadResult(ReadResult.OK, _buffer, length);
