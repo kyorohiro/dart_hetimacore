@@ -84,7 +84,9 @@ class HetimaDataCache extends HetimaData {
     }
 
     if(removeInfo == null || removeInfo.isWrite == false) {
-      com.complete(writeInfo);
+       _readFunc(writeInfo).then((WriteResult r) {
+        com.complete(writeInfo);
+      });
     } else {
     _writeFunc(removeInfo).then((WriteResult w) {
       return _readFunc(writeInfo).then((WriteResult r) {
