@@ -67,8 +67,10 @@ class HetimaDataCache extends HetimaData {
     for (CashInfo c in _cashInfoList) {
       print("#### ${c.index} <= ${startA} && ${startA} < ${(c.index + c.length)}");
       if (c.index <= startA && startA < (c.index + c.length)) {
-        _cashInfoList.remove(c);
-        _cashInfoList.add(c);
+        if(!_cashInfoList.contains(c)) {
+//          _cashInfoList.remove(c);
+          _cashInfoList.add(c);          
+        }
         com.complete(c);
         return com.future;
       }
