@@ -161,9 +161,11 @@ class HetimaDataCache extends HetimaData {
       for (ReadResult r in rl) {
         length += r.length;
       }
-      List<int> _buffer = tmp;
-      if(_buffer == null) {
-        _buffer = [];
+      List<int> _buffer = null;
+      if(_buffer == null || tmp.length < length) {
+        _buffer = new List(length);
+      } else {
+        _buffer = tmp;
       }
       int s = 0;
       int e = 0;
