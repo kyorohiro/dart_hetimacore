@@ -32,7 +32,7 @@ class HetimaDataBlob extends HetimaData {
   }
 
 
-  async.Future<ReadResult> read(int offset, int length) {
+  async.Future<ReadResult> read(int offset, int length, {List<int> tmp:null}) {
     async.Completer<ReadResult> ret = new async.Completer<ReadResult>();
     async.StreamSubscription a = null;
     async.StreamSubscription b = null;

@@ -112,7 +112,7 @@ class HetimaDataFS extends HetimaData {
     return completer.future;
   }
 
-  async.Future<ReadResult> read(int offset, int length) {
+  async.Future<ReadResult> read(int offset, int length, {List<int> tmp:null}) {
     async.Completer<ReadResult> c_ompleter = new async.Completer();
     init().then((e) {
       html.FileReader reader = new html.FileReader();

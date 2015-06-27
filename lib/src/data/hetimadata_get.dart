@@ -48,7 +48,7 @@ class HetimaDataGet extends HetimaData {
     return ret.future;
   }
 
-  async.Future<ReadResult> read(int offset, int length) {
+  async.Future<ReadResult> read(int offset, int length, {List<int> tmp:null}){
     async.Completer<ReadResult> ret = new async.Completer<ReadResult>();
     if (_mBlob != null) {
         return readBase(ret, offset, length);

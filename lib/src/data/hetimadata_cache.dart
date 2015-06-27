@@ -138,7 +138,7 @@ class HetimaDataCache extends HetimaData {
     return com.future;
   }
 
-  async.Future<ReadResult> read(int offset, int length) {
+  async.Future<ReadResult> read(int offset, int length, {List<int> tmp:null}){
     print("###############################jj ${offset} ${length}");
     async.Completer<ReadResult> com = new async.Completer();
     List<async.Future> act = [];
@@ -156,12 +156,23 @@ class HetimaDataCache extends HetimaData {
     async.Future.wait(act).then((List<ReadResult> rl) {
       int timeD = new DateTime.now().millisecondsSinceEpoch;
       print("Nnn ${timeD-timeC}");
-      //List<int> _buffer = [];
-      //for (ReadResult r in rl) {
-      //  _buffer.addAll(r.buffer);
-     // }
-     //ReadResult r = new ReadResult(ReadResult.OK, _buffer);
-      ReadResult r = new ReadResult(ReadResult.OK, rl[0].buffer);
+
+      int length = 0;
+      for (ReadResult r in rl) {
+        length += r.length;
+      }
+      List<int> _buffer = tmp;
+      if(_buffer == null) {
+        _buffer = [];
+      }
+      int s = 0;
+      int e = 0;
+      for (ReadResult r in rl) {
+         e = s+r.length;
+        _buffer.setRange(s, e, r.buffer);
+         s = e;
+      }
+      ReadResult r = new ReadResult(ReadResult.OK, _buffer, length);
       com.complete(r);
     });
     return com.future;

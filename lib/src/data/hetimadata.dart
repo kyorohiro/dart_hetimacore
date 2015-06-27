@@ -34,9 +34,15 @@ class ReadResult {
   static final NG = -1;
   int status = NG;
   List<int> buffer;
-  ReadResult(int _status, List<int> _buffer) {
+  int length = 0;
+  ReadResult(int _status, List<int> _buffer, [int length = -1]) {
     status = _status;
     buffer = _buffer;
+    if(length < 0) {
+      this.length = _buffer.length;
+    } else {
+      this.length = length;
+    }
   }
 }
 
@@ -52,7 +58,7 @@ class HetimaBuilderToFile extends HetimaData {
   }
 
   @override
-  async.Future<ReadResult> read(int offset, int length) {
+  async.Future<ReadResult> read(int offset, int length, {List<int> tmp:null}) {
     async.Completer<ReadResult> cc = new async.Completer();
     mBuilder.getByteFuture(offset, length).then((List<int> b){
       ReadResult result = new ReadResult(ReadResult.OK,
