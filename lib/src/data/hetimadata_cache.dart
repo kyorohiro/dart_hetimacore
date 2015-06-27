@@ -83,7 +83,7 @@ class HetimaDataCache extends HetimaData {
       removeInfo = _cashInfoList.removeAt(0);
     }
 
-    if(removeInfo.isWrite == false) {
+    if(removeInfo == null || removeInfo.isWrite == false) {
       com.complete(writeInfo);
     } else {
     _writeFunc(removeInfo).then((WriteResult w) {
