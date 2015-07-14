@@ -127,4 +127,18 @@ class HetimaDataFS extends HetimaData {
   }
 
   void beToReadOnly() {}
+  
+  static async.Future<List<String>> getFiles({persistent:false}) {
+    return html.window.requestFileSystem(1024,persistent: persistent).then((html.FileSystem e) {
+      return e.root.createReader().readEntries().then((List<html.Entry> files) {
+        List<String> ret = [];
+        for(html.Entry e in files) {
+          if(e.isFile) {
+           ret.add(e.name);
+          }
+        }
+        return ret;
+      });
+    });
+  }
 }
