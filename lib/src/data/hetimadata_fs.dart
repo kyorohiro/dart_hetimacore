@@ -141,4 +141,12 @@ class HetimaDataFS extends HetimaData {
       });
     });
   }
+  
+  static async.Future removeFile(String filename, {persistent:false}) {
+    return html.window.requestFileSystem(1024,persistent: persistent).then((html.FileSystem e) {
+      return e.root.getFile(filename).then((html.Entry e) {
+        return e.remove();
+      });
+    });
+  }
 }
