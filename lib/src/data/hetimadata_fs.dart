@@ -72,6 +72,15 @@ class HetimaDataFS extends HetimaData {
     return completer.future;
   }
 
+  html.FileWriter _writer = null;
+  createWriter() async {
+    if(_writer != null) {
+      return _writer;
+    } else {
+      return _fileEntry.createWriter();
+    }
+    
+  }
   async.Future<WriteResult> write(Object buffer, int start) {
     if (buffer is List<int> && !(buffer is data.Uint8List)) {
       buffer = new data.Uint8List.fromList(buffer);
@@ -79,8 +88,8 @@ class HetimaDataFS extends HetimaData {
 
     async.Completer<WriteResult> completer = new async.Completer();
     init().then((e) {
-      _fileEntry.createWriter().then((html.FileWriter writer) {
-        writer.onWrite.listen((html.ProgressEvent e) {
+      createWriter().then((html.FileWriter writer) {
+        writer.onWriteEnd.listen((html.ProgressEvent e) {
           completer.complete(new WriteResult());
         });
         return getLength().then((int len) {
