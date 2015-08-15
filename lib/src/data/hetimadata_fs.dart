@@ -84,6 +84,9 @@ class HetimaDataFS extends HetimaData {
           writer.abort();
           completer.complete(new WriteResult());
         });
+        writer.onError.listen((e){
+          completer.completeError({});
+        });
         return getLength().then((int len) {
           data.Uint8List dummy = null;
           if (len < start) {
@@ -118,7 +121,7 @@ class HetimaDataFS extends HetimaData {
     init().then((e) {
       html.FileReader reader = new html.FileReader();
       _fileEntry.file().then((html.File f) {
-        reader.onLoad.listen((html.ProgressEvent e) {
+        reader.onLoadEnd.listen((html.ProgressEvent e) {
           c_ompleter.complete(new ReadResult(ReadResult.OK, reader.result));
         });
         reader.readAsArrayBuffer(f.slice(offset, offset + length));
