@@ -19,7 +19,7 @@ abstract class HetimaReader {
   // maybe dart bug when use with dart:io: 
   // must to use rawcompleterFin.future...
   //
-  // async.Future<bool> get onFin => _completerFin.future;
+  async.Future<bool> get onFin => _completerFin.future;
 
   bool _immutable = false;
 
@@ -60,7 +60,7 @@ class HetimaReaderAdapter extends HetimaReader {
 
   async.Completer<bool> get rawcompleterFin => _base.rawcompleterFin;
   //
-  //async.Future<bool> get onFin => _base.onFin;
+  async.Future<bool> get onFin => _base.onFin;
 
   async.Future<List<int>> getByteFuture(int index, int length) {
     async.Completer<List<int>> completer = new async.Completer();
