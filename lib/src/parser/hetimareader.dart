@@ -76,4 +76,10 @@ class HetimaReaderAdapter extends HetimaReader {
   void fin() {
     _base.fin();
   }
+  
+  bool get immutable => _base._immutable;
+
+  void set immutable(bool v) {
+    _base._immutable = v;
+  }
 }
