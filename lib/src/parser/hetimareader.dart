@@ -12,14 +12,9 @@ abstract class HetimaReader {
     immutable = true;
   }
 
-  async.Completer completerFin = new async.Completer(); 
+  async.Completer _completerFin = new async.Completer(); 
 
-  async.Future<bool> onFin() {
-    if(_immutable == true) {
-      completerFin.complete(true);
-    }
-    return completerFin.future;
-  }
+  async.Future<bool> get onFin => _completerFin.future;
 
   bool _immutable = false;
 
@@ -29,7 +24,7 @@ abstract class HetimaReader {
     bool prev = _immutable;
     _immutable = v;
     if(prev == false && v== true) {
-      completerFin.complete(v);
+      _completerFin.complete(v);
     }
   }
 
@@ -58,9 +53,7 @@ class HetimaReaderAdapter extends HetimaReader {
     return completer.future;
   }
 
-  async.Future<bool> onFin() {
-   return _base.onFin();
-  }
+  async.Future<bool> get onFin => _base.onFin;
 
   async.Future<List<int>> getByteFuture(int index, int length) {
     async.Completer<List<int>> completer = new async.Completer();
