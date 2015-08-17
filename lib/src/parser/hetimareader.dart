@@ -14,6 +14,7 @@ abstract class HetimaReader {
 
   async.Completer<bool> _completerFin = new async.Completer(); 
 
+  async.Completer<bool> get rawcompleterFin => _completerFin;
   async.Future<bool> get onFin => _completerFin.future;
 
   bool _immutable = false;
