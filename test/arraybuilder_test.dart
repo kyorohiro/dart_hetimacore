@@ -1,10 +1,10 @@
 import 'package:unittest/unittest.dart' as unit;
 import 'package:hetimacore/hetimacore.dart' as hetima;
-import 'dart:async' as async;
+import 'dart:async';
 
 void main() {
   hetima.HetiTest test = new hetima.HetiTest("tt");
-///*
+
   unit.test("arraybuilder: init", () {
     hetima.ArrayBuilder builder = new hetima.ArrayBuilder();
     unit.expect(0, builder.size());
@@ -120,5 +120,34 @@ void main() {
     unit.expect(2, buffer[1]);
     unit.expect(5, buffer[4]);
     unit.expect(5, buffer.length);
+  });
+  unit.test("ArrayBuilderBuffer: [2]", () {
+    hetima.ArrayBuilder builder = new hetima.ArrayBuilder();
+    unit.expect(0, builder.size());
+    Completer c = new Completer();
+    
+    builder.getByteFuture(5, 1).then((List<int > v) {
+      unit.expect(builder.size(), 6);
+      c.complete(0);
+    });
+    new Future(() {
+      builder.appendByte(1);      
+    });
+    new Future(() {
+      builder.appendByte(2);      
+    });
+    new Future(() {
+      builder.appendByte(3);      
+    });
+    new Future(() {
+      builder.appendByte(4);      
+    });
+    new Future(() {
+      builder.appendByte(5);      
+    });
+    new Future(() {
+      builder.appendByte(6);      
+    });
+    return c.future;
   });
 }
