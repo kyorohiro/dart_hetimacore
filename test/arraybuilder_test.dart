@@ -150,17 +150,17 @@ void main() {
     });
     
     builder.getByteFuture(8, 1).then((List<int > v) {
-      unit.expect(v[0], 13);
+      unit.expect(v[0], 9);
       c.complete(0);
     });
     await new Future(() {
-      builder.appendByte(11);      
+      builder.appendByte(7);      
     });
     await new Future(() {
-      builder.appendByte(12);      
+      builder.appendByte(8);      
     });
     await new Future(() {
-      builder.appendByte(13);      
+      builder.appendByte(9);      
     });
     return c.future;
   });
