@@ -32,11 +32,14 @@ class ArrayBuilder extends HetimaReader {
     }
   }
 
-  async.Future<List<int>> getByteFuture(int index, int length) {
+  async.Future<List<int>> getByteFuture(int index, int length, [bool debug=true]) {
     GetByteFutureInfo info = new GetByteFutureInfo();
     info.completerResult = new List();
+    if(debug == true) {
+    info.completerResultLength = index+length;
+    }else {
     info.completerResultLength = (index-_length)+length;
-
+    }
     if (completer.isCompleted) {
       completer = new async.Completer();
     }
