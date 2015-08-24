@@ -42,8 +42,7 @@ class ArrayBuilder extends HetimaReader {
       completer = new async.Completer();
     }
 
-    int v = index;
-    for (index; index < size() && index < (length + v); index++) {
+    for (index; index < size() && index < (length + info.index); index++) {
       info.completerResult.add(get(index));
     }
 
@@ -112,11 +111,11 @@ class ArrayBuilder extends HetimaReader {
 
     List<GetByteFutureInfo> removeList = new List();
     for (GetByteFutureInfo f in mGetByteFutreList) {
-      if (!completer.isCompleted && f.completerResult != null) {
+      if (!completer.isCompleted && f.completerResult != null && f.index < _length) {
         f.completerResult.add(v);
       }
 
-      if (f.completerResult != null && f.index + f.completerResultLength <= f.completerResult.length) {
+      if (f.completerResult != null && f.completerResultLength <= f.completerResult.length) {
         completer.complete(f.completerResult);
         f.completerResult = null;
         f.completerResultLength = 0;
