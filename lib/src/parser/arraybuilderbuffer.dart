@@ -7,7 +7,7 @@ import 'dart:core';
 class ArrayBuilderBuffer {
   int _clearedBuffer = 0;
   List<int> _buffer8 = null;
-  List<int> get buffer8 => _buffer8;
+  List<int> get rawbuffer8 => _buffer8;
 
   int get clearedBuffer => _clearedBuffer;
 
