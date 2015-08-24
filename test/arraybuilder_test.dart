@@ -121,7 +121,7 @@ void main() {
     unit.expect(5, buffer[4]);
     unit.expect(5, buffer.length);
   });
-  unit.test("ArrayBuilderBuffer: [2]", () {
+  unit.test("ArrayBuilderBuffer: [2]", () async {
     hetima.ArrayBuilder builder = new hetima.ArrayBuilder();
     unit.expect(0, builder.size());
     Completer c = new Completer();
@@ -130,23 +130,37 @@ void main() {
       unit.expect(builder.size(), 6);
       c.complete(0);
     });
-    new Future(() {
+    await new Future(() {
       builder.appendByte(1);      
     });
-    new Future(() {
+    await new Future(() {
       builder.appendByte(2);      
     });
-    new Future(() {
+    await new Future(() {
       builder.appendByte(3);      
     });
-    new Future(() {
+    await new Future(() {
       builder.appendByte(4);      
     });
-    new Future(() {
+    await new Future(() {
       builder.appendByte(5);      
     });
-    new Future(() {
+    await new Future(() {
       builder.appendByte(6);      
+    });
+    
+    builder.getByteFuture(8, 1).then((List<int > v) {
+      unit.expect(v[0], 13);
+      c.complete(0);
+    });
+    await new Future(() {
+      builder.appendByte(11);      
+    });
+    await new Future(() {
+      builder.appendByte(12);      
+    });
+    await new Future(() {
+      builder.appendByte(13);      
     });
     return c.future;
   });
