@@ -12,6 +12,7 @@ class ArrayBuilder extends HetimaReader {
   int _max = 1024;
 //  List<int> _buffer8;
   ArrayBuilderBuffer _buffer8;
+  ArrayBuilderBuffer get rawbuffer8 => _buffer8;
   int _length = 0;
 
   async.Completer completer = new async.Completer();

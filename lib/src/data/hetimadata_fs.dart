@@ -64,7 +64,6 @@ class HetimaDataFS extends HetimaData {
   async.Future<int> getLength() {
     async.Completer<int> completer = new async.Completer();
     init().then((e) {
-      html.FileReader reader = new html.FileReader();
       _fileEntry.file().then((html.File f) {
         completer.complete(f.size);
       });
