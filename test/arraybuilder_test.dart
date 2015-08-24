@@ -154,13 +154,7 @@ void main() {
       c.complete(0);
     });
     await new Future(() {
-      builder.appendByte(7);      
-    });
-    await new Future(() {
-      builder.appendByte(8);      
-    });
-    await new Future(() {
-      builder.appendByte(9);      
+      builder.appendIntList([7,8,9]);
     });
     return c.future;
   });
