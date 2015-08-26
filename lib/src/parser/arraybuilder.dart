@@ -7,19 +7,16 @@ import 'dart:core';
 import 'hetimareader.dart';
 import 'arraybuilderbuffer.dart';
 
-
 class ArrayBuilder extends HetimaReader {
   int _max = 1024;
   ArrayBuilderBuffer _buffer8;
   ArrayBuilderBuffer get rawbuffer8 => _buffer8;
   int _length = 0;
-
-  Completer completer = new Completer();
   List<GetByteFutureInfo> mGetByteFutreList = new List();
 
   int get clearedBuffer => _buffer8.clearedBuffer;
 
-  ArrayBuilder({bufferSize:1024}) {
+  ArrayBuilder({bufferSize: 1024}) {
     _max = bufferSize;
     _buffer8 = new ArrayBuilderBuffer(_max); //new data.Uint8List(_max);
   }
@@ -32,29 +29,51 @@ class ArrayBuilder extends HetimaReader {
     }
   }
 
-  Future<List<int>> getByteFuture(int index, int length) {
-    GetByteFutureInfo info = new GetByteFutureInfo();
-    info.completerResult = new List();
-    info.completerResultLength = length;
-    info.index = index;
-
-    if (completer.isCompleted) {
-      completer = new Completer();
-    }
-
-    for (index; index < size() && index < (length + info.index); index++) {
-      info.completerResult.add(get(index));
-    }
-
-    if ((info.completerResultLength <= info.completerResult.length) || (immutable)) {
-      completer.complete(info.completerResult);
+  bool updateA(GetByteFutureInfo info) {
+    if (info.completerResult != null && info.index + info.completerResultLength-1 < _length) {
+      for (int i = 0; i < info.completerResultLength; i++) {
+        info.completerResult[i] = _buffer8[info.index + i];
+      }
+      info.completer.complete(info.completerResult);
       info.completerResult = null;
       info.completerResultLength = 0;
+      return true;
     } else {
+      return false;
+    }
+  }
+  bool updateB() {
+    List<GetByteFutureInfo> removeList = new List();
+    for (GetByteFutureInfo f in mGetByteFutreList) {
+      if (true == updateA(f)) {
+        removeList.add(f);
+      }
+    }
+    for (GetByteFutureInfo f in removeList) {
+      mGetByteFutreList.remove(f);
+    }
+  }
+
+  Future<List<int>> getByteFuture(int index, int length, {data.Uint8List buffer:null}) {
+    GetByteFutureInfo info = new GetByteFutureInfo();
+    if(buffer == null) {
+      info.completerResult = new data.Uint8List(length);
+    } else {
+      info.completerResult = buffer;
+    }
+    if(info.completerResult.length < length) {
+      throw {};
+    }
+
+    info.completerResultLength = length;
+    info.index = index;
+    info.completer = new Completer();
+
+    if (false == updateA(info)) {
       mGetByteFutreList.add(info);
     }
 
-    return completer.future;
+    return info.completer.future;
   }
 
   int get(int index) {
@@ -66,7 +85,7 @@ class ArrayBuilder extends HetimaReader {
   }
 
   void clearInnerBuffer(int len) {
-    _buffer8.clearInnerBuffer(len);  
+    _buffer8.clearInnerBuffer(len);
   }
 
   int size() {
@@ -90,7 +109,7 @@ class ArrayBuilder extends HetimaReader {
   void fin() {
     for (GetByteFutureInfo f in mGetByteFutreList) {
       if (f.completerResult != null) {
-        completer.complete(f.completerResult);
+        f.completer.complete(f.completerResult);
         f.completerResult = null;
         f.completerResultLength = 0;
       }
@@ -106,23 +125,9 @@ class ArrayBuilder extends HetimaReader {
     update(1);
     _buffer8[_length] = v;
     _length += 1;
+    
+    updateB();
 
-    List<GetByteFutureInfo> removeList = new List();
-    for (GetByteFutureInfo f in mGetByteFutreList) {
-      if (!completer.isCompleted && f.completerResult != null && f.index < _length) {
-        f.completerResult.add(v);
-      }
-
-      if (f.completerResult != null && f.completerResultLength <= f.completerResult.length) {
-        completer.complete(f.completerResult);
-        f.completerResult = null;
-        f.completerResultLength = 0;
-        removeList.add(f);
-      }
-    }
-    for (GetByteFutureInfo f in removeList) {
-      mGetByteFutreList.remove(f);
-    }
   }
 
   void appendString(String text) {
@@ -133,21 +138,16 @@ class ArrayBuilder extends HetimaReader {
     }
   }
 
-  void appendUint8List(data.Uint8List buffer, int index, int length) {
+  void appendIntList(List<int> buffer, [int index = 0, int length = -1]) {
     update(length);
-    for (int i = 0; i < length; i++) {
-      appendByte(buffer[index + i]);
-    }
-  }
-
-  void appendIntList(List<int> buffer,[ int index=0, int length=-1]) {
-    update(length);
-    if(length<0) {
+    if (length < 0) {
       length = buffer.length;
     }
     for (int i = 0; i < length; i++) {
-      appendByte(buffer[index + i]);
+      _buffer8[_length+i] = buffer[index+i];
     }
+    _length += length;
+    updateB();
   }
 
   List toList() {
@@ -167,5 +167,5 @@ class GetByteFutureInfo {
   List<int> completerResult = new List();
   int completerResultLength = 0;
   int index = 0;
+  Completer<List<int>> completer = null;
 }
-
