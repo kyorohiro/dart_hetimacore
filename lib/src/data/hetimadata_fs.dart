@@ -1,14 +1,14 @@
 library hetimacore_cl.impl;
 
 import 'dart:typed_data' as data;
-import 'dart:async' as async;
+import 'dart:async';
 import 'dart:core';
 import 'dart:html' as html;
 import '../../hetimacore.dart';
 
 class HetimaDataFSBuilder extends HetimaDataBuilder {
-  async.Future<HetimaData> createHetimaData(String path) {
-    async.Completer<HetimaData> co = new async.Completer();
+  Future<HetimaData> createHetimaData(String path) {
+    Completer<HetimaData> co = new Completer();
     co.complete(new HetimaDataFS(path));
     return co.future;
   }
@@ -34,12 +34,12 @@ class HetimaDataFS extends HetimaData {
     fileName = fileEntry.name;
   }
 
-  async.Future<html.Entry> getEntry() {
+  Future<html.Entry> getEntry() {
     return init();
   }
 
-  async.Future<html.Entry> init() {
-    async.Completer<html.Entry> completer = new async.Completer();
+  Future<html.Entry> init() {
+    Completer<html.Entry> completer = new Completer();
     if (_fileEntry != null) {
       completer.complete(_fileEntry);
       return completer.future;
@@ -61,8 +61,8 @@ class HetimaDataFS extends HetimaData {
     return completer.future;
   }
 
-  async.Future<int> getLength() {
-    async.Completer<int> completer = new async.Completer();
+  Future<int> getLength() {
+    Completer<int> completer = new Completer();
     init().then((e) {
       _fileEntry.file().then((html.File f) {
         completer.complete(f.size);
@@ -71,12 +71,12 @@ class HetimaDataFS extends HetimaData {
     return completer.future;
   }
 
-  async.Future<WriteResult> write(Object buffer, int start) {
+  Future<WriteResult> write(Object buffer, int start) {
     if (buffer is List<int> && !(buffer is data.Uint8List)) {
       buffer = new data.Uint8List.fromList(buffer);
     }
 
-    async.Completer<WriteResult> completer = new async.Completer();
+    Completer<WriteResult> completer = new Completer();
     init().then((e) {
       _fileEntry.createWriter().then((html.FileWriter writer) {
         writer.onWrite.listen((html.ProgressEvent e) {
@@ -102,8 +102,8 @@ class HetimaDataFS extends HetimaData {
     return completer.future;
   }
 
-  async.Future<int> truncate(int fileSize) {
-    async.Completer<int> completer = new async.Completer();
+  Future<int> truncate(int fileSize) {
+    Completer<int> completer = new Completer();
     init().then((e) {
       return _fileEntry.createWriter();
     }).then((html.FileWriter writer) {
@@ -115,8 +115,8 @@ class HetimaDataFS extends HetimaData {
     return completer.future;
   }
 
-  async.Future<ReadResult> read(int offset, int length, {List<int> tmp:null}) {
-    async.Completer<ReadResult> c_ompleter = new async.Completer();
+  Future<ReadResult> read(int offset, int length, {List<int> tmp:null}) {
+    Completer<ReadResult> c_ompleter = new Completer();
     init().then((e) {
       html.FileReader reader = new html.FileReader();
       _fileEntry.file().then((html.File f) {
@@ -131,7 +131,7 @@ class HetimaDataFS extends HetimaData {
 
   void beToReadOnly() {}
   
-  static async.Future<List<String>> getFiles({persistent:false}) {
+  static Future<List<String>> getFiles({persistent:false}) {
     return html.window.requestFileSystem(1024,persistent: persistent).then((html.FileSystem e) {
       return e.root.createReader().readEntries().then((List<html.Entry> files) {
         List<String> ret = [];
@@ -145,7 +145,7 @@ class HetimaDataFS extends HetimaData {
     });
   }
   
-  static async.Future removeFile(String filename, {persistent:false}) {
+  static Future removeFile(String filename, {persistent:false}){
     return html.window.requestFileSystem(1024,persistent: persistent).then((html.FileSystem e) {
       return e.root.getFile(filename).then((html.Entry e) {
         return e.remove();
