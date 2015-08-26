@@ -16,7 +16,7 @@ class ArrayBuilderBuffer {
   }
 
   ArrayBuilderBuffer.fromList(List<int> buffer) {
-    _buffer8 = buffer;
+    _buffer8 = new data.Uint8List.fromList(buffer);
   }
 
   int operator [](int index) {

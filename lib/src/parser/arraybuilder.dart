@@ -29,8 +29,8 @@ class ArrayBuilder extends HetimaReader {
     }
   }
 
-  bool updateA(GetByteFutureInfo info) {
-    if (info.completerResult != null && info.index + info.completerResultLength-1 < _length) {
+  bool _updateGetInfo(GetByteFutureInfo info) {
+    if (info.completerResult != null && info.index + info.completerResultLength - 1 < _length) {
       for (int i = 0; i < info.completerResultLength; i++) {
         info.completerResult[i] = _buffer8[info.index + i];
       }
@@ -42,10 +42,11 @@ class ArrayBuilder extends HetimaReader {
       return false;
     }
   }
-  bool updateB() {
+
+  void _updateGetInfos() {
     List<GetByteFutureInfo> removeList = new List();
     for (GetByteFutureInfo f in mGetByteFutreList) {
-      if (true == updateA(f)) {
+      if (true == _updateGetInfo(f)) {
         removeList.add(f);
       }
     }
@@ -54,14 +55,14 @@ class ArrayBuilder extends HetimaReader {
     }
   }
 
-  Future<List<int>> getByteFuture(int index, int length, {data.Uint8List buffer:null}) {
+  Future<List<int>> getByteFuture(int index, int length, {data.Uint8List buffer: null}) {
     GetByteFutureInfo info = new GetByteFutureInfo();
-    if(buffer == null) {
+    if (buffer == null) {
       info.completerResult = new data.Uint8List(length);
     } else {
       info.completerResult = buffer;
     }
-    if(info.completerResult.length < length) {
+    if (info.completerResult.length < length) {
       throw {};
     }
 
@@ -69,16 +70,16 @@ class ArrayBuilder extends HetimaReader {
     info.index = index;
     info.completer = new Completer();
 
-    if (false == updateA(info)) {
+    if (false == _updateGetInfo(info)) {
       mGetByteFutreList.add(info);
     }
 
     return info.completer.future;
   }
 
-  int get(int index) {
-    return 0xFF & _buffer8[index];
-  }
+  int operator [](int index) => 0xFF & _buffer8[index];
+
+  int get(int index) => 0xFF & _buffer8[index];
 
   void clear() {
     _length = 0;
@@ -110,8 +111,6 @@ class ArrayBuilder extends HetimaReader {
     for (GetByteFutureInfo f in mGetByteFutreList) {
       if (f.completerResult != null) {
         f.completer.complete(f.completerResult);
-        f.completerResult = null;
-        f.completerResultLength = 0;
       }
     }
     mGetByteFutreList.clear();
@@ -125,42 +124,33 @@ class ArrayBuilder extends HetimaReader {
     update(1);
     _buffer8[_length] = v;
     _length += 1;
-    
-    updateB();
 
-  }
-
-  void appendString(String text) {
-    List<int> code = convert.UTF8.encode(text);
-    update(code.length);
-    for (int i = 0; i < code.length; i++) {
-      appendByte(code[i]);
-    }
+    _updateGetInfos();
   }
 
   void appendIntList(List<int> buffer, [int index = 0, int length = -1]) {
-    update(length);
+    if (immutable) {
+      return;
+    }
     if (length < 0) {
       length = buffer.length;
     }
+    update(length);
+
     for (int i = 0; i < length; i++) {
-      _buffer8[_length+i] = buffer[index+i];
+      _buffer8[_length + i] = buffer[index + i];
     }
     _length += length;
-    updateB();
+    _updateGetInfos();
   }
 
-  List toList() {
-    return _buffer8.sublist(0, _length);
-  }
+  void appendString(String text) => appendIntList(convert.UTF8.encode(text));
 
-  data.Uint8List toUint8List() {
-    return new data.Uint8List.fromList(toList());
-  }
+  List toList() => _buffer8.sublist(0, _length);
 
-  String toText() {
-    return convert.UTF8.decode(toList());
-  }
+  data.Uint8List toUint8List() => new data.Uint8List.fromList(toList());
+
+  String toText() => convert.UTF8.decode(toList());
 }
 
 class GetByteFutureInfo {
