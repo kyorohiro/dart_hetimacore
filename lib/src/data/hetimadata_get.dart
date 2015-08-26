@@ -63,13 +63,13 @@ class HetimaDataGet extends HetimaData {
   async.Future<ReadResult> readBase(async.Completer<ReadResult> ret, int start, int end) {
     html.FileReader reader = new html.FileReader();
     reader.onLoad.listen((html.ProgressEvent e) {
-      ret.complete(new ReadResult(ReadResult.OK, reader.result));
+      ret.complete(new ReadResult(reader.result));
     });
     reader.onError.listen((html.Event e) {
-      ret.complete(new ReadResult(ReadResult.NG, null));
+      ret.completeError("error");
     });
     reader.onAbort.listen((html.ProgressEvent e) {
-      ret.complete(new ReadResult(ReadResult.NG, null));
+      ret.completeError("abort");
     });
     reader.readAsArrayBuffer(_mBlob.slice(start, end));
     return ret.future;

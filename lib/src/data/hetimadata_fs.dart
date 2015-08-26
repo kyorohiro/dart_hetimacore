@@ -101,7 +101,7 @@ class HetimaDataFS extends HetimaData {
     html.FileReader reader = new html.FileReader();
     html.File f = await _fileEntry.file();
     reader.onLoad.listen((_) {
-      c_ompleter.complete(new ReadResult(ReadResult.OK, reader.result));
+      c_ompleter.complete(new ReadResult(reader.result));
     });
     reader.onError.listen((_) {
       c_ompleter.completeError(_);

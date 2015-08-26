@@ -39,7 +39,7 @@ class HetimaDataBlob extends HetimaData {
     async.StreamSubscription c = null;
     html.FileReader reader = new html.FileReader();
     a = reader.onLoadEnd.listen((html.ProgressEvent e) {
-      ret.complete(new ReadResult(ReadResult.OK, reader.result));
+      ret.complete(new ReadResult(reader.result));
       a.cancel();
       b.cancel();
       c.cancel();
@@ -51,11 +51,11 @@ class HetimaDataBlob extends HetimaData {
     });
     b = reader.onError.listen((html.Event e) {
       print("read error : ${e}");
-      ret.complete(new ReadResult(ReadResult.NG, null));
+      ret.completeError("error");
     });
     c = reader.onAbort.listen((html.ProgressEvent e) {
       print("read abort : ${e}");
-      ret.complete(new ReadResult(ReadResult.NG, null));
+      ret.completeError("abort");
     });
     reader.readAsArrayBuffer(_mBlob.slice(offset, offset+length));
     return ret.future;

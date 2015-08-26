@@ -65,9 +65,9 @@ class HetimaDataMemory extends HetimaData {
       end = _dataBuffer.length;
     }
     if (offset >= end) {
-      comp.complete(new ReadResult(ReadResult.OK, []));
+      comp.complete(new ReadResult([]));
     } else {
-      comp.complete(new ReadResult(ReadResult.OK, _dataBuffer.sublist(offset, end)));
+      comp.complete(new ReadResult(_dataBuffer.sublist(offset, end)));
     }
     return comp.future;
   }

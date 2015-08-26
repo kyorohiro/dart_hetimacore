@@ -30,13 +30,9 @@ class WriteResult {
 }
 
 class ReadResult {
-  static final OK = 1;
-  static final NG = -1;
-  int status = NG;
   List<int> buffer;
   int length = 0;
-  ReadResult(int _status, List<int> _buffer, [int length = -1]) {
-    status = _status;
+  ReadResult(List<int> _buffer, [int length = -1]) {
     buffer = _buffer;
     if(length < 0) {
       this.length = _buffer.length;
@@ -61,8 +57,7 @@ class HetimaBuilderToFile extends HetimaData {
   async.Future<ReadResult> read(int offset, int length, {List<int> tmp:null}) {
     async.Completer<ReadResult> cc = new async.Completer();
     mBuilder.getByteFuture(offset, length).then((List<int> b){
-      ReadResult result = new ReadResult(ReadResult.OK,
-          new data.Uint8List.fromList(b));
+      ReadResult result = new ReadResult(new data.Uint8List.fromList(b));
       cc.complete(result);
     }).catchError((e){
       cc.completeError(e);
@@ -93,11 +88,7 @@ class HetimaFileToBuilder extends HetimaReader {
   async.Future<List<int>> getByteFuture(int index, int length) {
     async.Completer<List<int>> c = new async.Completer();
     mFile.read(index, length).then((ReadResult r) {
-      if(r.status == ReadResult.OK) {
         c.complete(r.buffer.toList());
-      } else {
-        throw new Error();
-      }
     }).catchError((e){
       c.completeError(e);
     });

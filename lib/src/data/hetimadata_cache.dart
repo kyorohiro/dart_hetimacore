@@ -157,7 +157,7 @@ class HetimaDataCache extends HetimaData {
     // zero
     if (indexList.length == 0) {
       return new async.Future(() {
-        return new ReadResult(ReadResult.OK, []);
+        return new ReadResult([]);
       });
     }
     //
@@ -209,7 +209,7 @@ class HetimaDataCache extends HetimaData {
         }
         
         // end
-        return new ReadResult(ReadResult.OK, _buffer, length);
+        return new ReadResult(_buffer, length);
       });
     }
   }
