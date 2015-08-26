@@ -3,7 +3,6 @@ library hetimacore.arraybuffer;
 import 'dart:typed_data' as data;
 import 'dart:core';
 
-
 class ArrayBuilderBuffer {
   int _clearedBuffer = 0;
   List<int> _buffer8 = null;
@@ -36,30 +35,24 @@ class ArrayBuilderBuffer {
   }
 
   List<int> sublist(int start, int end) {
-    List<int> ret = [];
-    {
-      int s = start-_clearedBuffer;
-      int e = end-_clearedBuffer;
-      if(s<0) {
-        ret.addAll(new List.filled(-1*s, 0));
-        s=0;
-      }      
-      ret.addAll(_buffer8.sublist(s, e));
+    data.Uint8List ret = new data.Uint8List(end - start);
+    for (int j = 0; j < end-start; j++) {
+      ret[j] = this[j+start];
     }
     return ret;
   }
 
   void clearInnerBuffer(int len) {
-    if(_clearedBuffer >= len) {
+    if (_clearedBuffer >= len) {
       return;
     }
 
-    if(length <= len) {
+    if (length <= len) {
       return;
     }
 
-    int erace = len-_clearedBuffer;
-    
+    int erace = len - _clearedBuffer;
+
     _buffer8 = _buffer8.sublist(erace);
     _clearedBuffer = len;
   }
