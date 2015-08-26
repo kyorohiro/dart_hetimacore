@@ -31,8 +31,18 @@ class ArrayBuilder extends HetimaReader {
 
   bool _updateGetInfo(GetByteFutureInfo info) {
     if (this.immutable == true ||  info.completerResult != null && info.index + info.completerResultLength - 1 < _length) {
-      for (int i = 0; i < info.completerResultLength&&info.index + i < _buffer8.length; i++) {
+      int length = 0;
+      for (int i = 0; i < info.completerResultLength&&info.index + i < size(); i++) {
         info.completerResult[i] = _buffer8[info.index + i];
+        length +=1;
+      }
+      if(info.completerResult.length > length) {
+        List<int> k = info.completerResult.sublist(0,length);
+        if(!(k is data.Uint8List)) {
+          info.completerResult = new data.Uint8List.fromList(k);          
+        } else {
+          info.completerResult = k;
+        }
       }
       info.completer.complete(info.completerResult);
       info.completerResult = null;

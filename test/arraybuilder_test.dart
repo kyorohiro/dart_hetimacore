@@ -4,7 +4,7 @@ import 'dart:async';
 
 void main() {
   hetima.HetiTest test = new hetima.HetiTest("tt");
-
+/*
   unit.test("arraybuilder: init", () {
     hetima.ArrayBuilder builder = new hetima.ArrayBuilder();
     unit.expect(0, builder.size());
@@ -164,4 +164,26 @@ void main() {
     unit.expect(isOK2, true);
     });
   });
+  */
+  unit.test("ArrayBuilderBuffer: [2]", () async {
+     hetima.ArrayBuilder builder = new hetima.ArrayBuilder();
+     builder.getByteFuture(2, 3).then((List<int > v) {
+       unit.expect(v.length, 2);
+       unit.expect(3, v[0]);
+       unit.expect(4, v[1]);
+     });
+     await new Future(() {
+       builder.appendByte(1);      
+     });
+     await new Future(() {
+       builder.appendByte(2);      
+     });
+     await new Future(() {
+       builder.appendByte(3);      
+     });
+     await new Future(() {
+       builder.appendByte(4);      
+     });
+     builder.fin();
+   });
 }
