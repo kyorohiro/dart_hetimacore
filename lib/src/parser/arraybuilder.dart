@@ -2,7 +2,7 @@ library hetimacore.array;
 
 import 'dart:typed_data' as data;
 import 'dart:convert' as convert;
-import 'dart:async' as async;
+import 'dart:async';
 import 'dart:core';
 import 'hetimareader.dart';
 import 'arraybuilderbuffer.dart';
@@ -10,17 +10,17 @@ import 'arraybuilderbuffer.dart';
 
 class ArrayBuilder extends HetimaReader {
   int _max = 1024;
-//  List<int> _buffer8;
   ArrayBuilderBuffer _buffer8;
   ArrayBuilderBuffer get rawbuffer8 => _buffer8;
   int _length = 0;
 
-  async.Completer completer = new async.Completer();
+  Completer completer = new Completer();
   List<GetByteFutureInfo> mGetByteFutreList = new List();
 
   int get clearedBuffer => _buffer8.clearedBuffer;
 
-  ArrayBuilder() {
+  ArrayBuilder({bufferSize:1024}) {
+    _max = bufferSize;
     _buffer8 = new ArrayBuilderBuffer(_max); //new data.Uint8List(_max);
   }
 
@@ -32,14 +32,14 @@ class ArrayBuilder extends HetimaReader {
     }
   }
 
-  async.Future<List<int>> getByteFuture(int index, int length) {
+  Future<List<int>> getByteFuture(int index, int length) {
     GetByteFutureInfo info = new GetByteFutureInfo();
     info.completerResult = new List();
     info.completerResultLength = length;
     info.index = index;
 
     if (completer.isCompleted) {
-      completer = new async.Completer();
+      completer = new Completer();
     }
 
     for (index; index < size() && index < (length + info.index); index++) {
@@ -73,10 +73,8 @@ class ArrayBuilder extends HetimaReader {
     return _length;
   }
 
-  async.Future<int> getLength() {
-    async.Completer<int> completer = new async.Completer();
-    completer.complete(_length);
-    return completer.future;
+  Future<int> getLength() async {
+    return _length;
   }
 
   void update(int plusLength) {
