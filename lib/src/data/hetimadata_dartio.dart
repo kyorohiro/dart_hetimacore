@@ -28,8 +28,8 @@ class HetimaDataDartIO extends HetimaData {
     if (tmp == null) {
       tmp = new data.Uint8List(length);
     }
-    await _randomFile.readInto(tmp, offset, offset + length);
-    return new ReadResult(ReadResult.OK, tmp);
+    int l = await _randomFile.readInto(tmp, offset, offset + length);
+    return new ReadResult(ReadResult.OK, tmp, l);
   }
 
   @override
