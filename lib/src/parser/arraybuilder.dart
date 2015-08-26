@@ -30,8 +30,8 @@ class ArrayBuilder extends HetimaReader {
   }
 
   bool _updateGetInfo(GetByteFutureInfo info) {
-    if (info.completerResult != null && info.index + info.completerResultLength - 1 < _length) {
-      for (int i = 0; i < info.completerResultLength; i++) {
+    if (this.immutable == true ||  info.completerResult != null && info.index + info.completerResultLength - 1 < _length) {
+      for (int i = 0; i < info.completerResultLength&&info.index + i < _buffer8.length; i++) {
         info.completerResult[i] = _buffer8[info.index + i];
       }
       info.completer.complete(info.completerResult);
@@ -108,13 +108,9 @@ class ArrayBuilder extends HetimaReader {
   }
 
   void fin() {
-    for (GetByteFutureInfo f in mGetByteFutreList) {
-      if (f.completerResult != null) {
-        f.completer.complete(f.completerResult);
-      }
-    }
-    mGetByteFutreList.clear();
     immutable = true;
+    _updateGetInfos();
+    mGetByteFutreList.clear();
   }
 
   void appendByte(int v) {
