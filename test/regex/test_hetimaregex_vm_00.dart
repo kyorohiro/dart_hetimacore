@@ -1,6 +1,6 @@
 library dart_hetimaregex_test_vm;
 
-import 'package:hetimaregex/hetimaregex.dart' as regex;
+import 'package:hetimacore/hetimaregex.dart' as regex;
 import 'package:unittest/unittest.dart';
 
 import 'dart:convert' as conv;

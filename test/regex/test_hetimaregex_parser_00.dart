@@ -1,6 +1,6 @@
 library dart_hetimaparser_test_parser;
 
-import 'package:hetimaregex/hetimaregex.dart' as regex;
+import 'package:hetimacore/hetimaregex.dart' as regex;
 import 'package:unittest/unittest.dart';
 
 import 'dart:convert' as conv;
