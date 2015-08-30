@@ -37,13 +37,12 @@ class ArrayBuilder extends HetimaReader {
         info.completerResult[i] = _buffer8[info.index + i];
         length += 1;
       }
-      if (info.completerResult.length > length) {
-        if (info.completerResult is Uint8ListWithLength) {
-          (info.completerResult as Uint8ListWithLength).setCurrentLength(length);
-        } else {
-          List<int> k = info.completerResult.sublist(0, length);
-          info.completerResult = k;
-        }
+
+      if (info.completerResult is Uint8ListWithLength) {
+        (info.completerResult as Uint8ListWithLength).setCurrentLength(length);
+      } else if (info.completerResult.length > length) {
+        List<int> k = info.completerResult.sublist(0, length);
+        info.completerResult = k;
       }
       info.completer.complete(info.completerResult);
       info.completerResult = null;

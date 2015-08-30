@@ -28,7 +28,9 @@ class Uint8ListWithLength implements List {
   operator [](int index) => _buffer[index];
 
   @override
-  void operator []=(int index, value) => _buffer[index] = value;
+  void operator []=(int index, value) {
+    _buffer[index] = value;
+  }
 
   @override
   void add(value) => _buffer.add(value);
