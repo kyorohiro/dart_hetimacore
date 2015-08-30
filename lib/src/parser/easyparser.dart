@@ -1,12 +1,12 @@
 library hetimacore.parser;
+
 import 'dart:typed_data' as data;
 import 'dart:math' as math;
 import 'dart:convert' as convert;
-import 'dart:async' as async;
+import 'dart:async';
 import 'dart:core';
 import 'hetimareader.dart';
 import 'byteorder.dart';
-
 
 class EasyParser {
   int index = 0;
@@ -52,23 +52,18 @@ class EasyParser {
   int getInedx() {
     return index;
   }
-  async.Future<List<int>> getPeek(int length) {
+  Future<List<int>> getPeek(int length) {
     return buffer.getByteFuture(index, length);
   }
 
-  async.Future<List<int>> nextBuffer(int length) {
-    async.Completer<List<int>> completer = new async.Completer();
-    buffer.getByteFuture(index, length).then((List<int> v) {
-      index += v.length;
-      completer.complete(v);
-    }).catchError((e) {
-      completer.completeError(e);
-    });
-    return completer.future;
+  Future<List<int>> nextBuffer(int length) async {
+    List<int> v = await buffer.getByteFuture(index, length);
+    index += v.length;
+    return v;
   }
 
-  async.Future<String> nextString(String value) {
-    async.Completer completer = new async.Completer();
+  Future<String> nextString(String value) {
+    Completer completer = new Completer();
     List<int> encoded = convert.UTF8.encode(value);
     buffer.getByteFuture(index, encoded.length).then((List<int> v) {
       if (v.length != encoded.length) {
@@ -89,8 +84,8 @@ class EasyParser {
     return completer.future;
   }
 
-  async.Future<int> nextBytePattern(EasyParserMatcher matcher) {
-    async.Completer completer = new async.Completer();
+  Future<int> nextBytePattern(EasyParserMatcher matcher) {
+    Completer completer = new Completer();
     matcher.init();
     buffer.getByteFuture(index, 1).then((List<int> v) {
       if (v.length < 1) {
@@ -106,9 +101,8 @@ class EasyParser {
     return completer.future;
   }
 
-  async.Future<List<int>> nextBytePatternWithLength(
-      EasyParserMatcher matcher, int length) {
-    async.Completer completer = new async.Completer();
+  Future<List<int>> nextBytePatternWithLength(EasyParserMatcher matcher, int length) {
+    Completer completer = new Completer();
     matcher.init();
     buffer.getByteFuture(index, length).then((List<int> va) {
       if (va.length < length) {
@@ -127,12 +121,11 @@ class EasyParser {
     return completer.future;
   }
 
-  async.Future<List<int>> nextBytePatternByUnmatch(EasyParserMatcher matcher,
-      [bool keepWhenMatchIsTrue = true]) {
-    async.Completer completer = new async.Completer();
+  Future<List<int>> nextBytePatternByUnmatch(EasyParserMatcher matcher, [bool keepWhenMatchIsTrue = true]) {
+    Completer completer = new Completer();
     matcher.init();
     List<int> ret = new List<int>();
-    async.Future<Object> p() {
+    Future<Object> p() {
       return buffer.getByteFuture(index, 1).then((List<int> va) {
         if (va.length < 1) {
           completer.complete(ret);
@@ -154,8 +147,8 @@ class EasyParser {
   //
   //
   //
-  async.Future<String> readSignWithLength(int length) {
-    async.Completer<String> completer = new async.Completer();
+  Future<String> readSignWithLength(int length) {
+    Completer<String> completer = new Completer();
     buffer.getByteFuture(index, length).then((List<int> va) {
       if (va.length < length) {
         completer.completeError(new EasyParseError());
@@ -168,8 +161,8 @@ class EasyParser {
     });
     return completer.future;
   }
-  async.Future<int> readShort(int byteorder) {
-    async.Completer<int> completer = new async.Completer();
+  Future<int> readShort(int byteorder) {
+    Completer<int> completer = new Completer();
     buffer.getByteFuture(index, 2).then((List<int> va) {
       if (va.length < 2) {
         completer.completeError(new EasyParseError());
@@ -183,8 +176,8 @@ class EasyParser {
     return completer.future;
   }
 
-  async.Future<List<int>> readShortArray(int byteorder, int num) {
-    async.Completer<List<int>> completer = new async.Completer();
+  Future<List<int>> readShortArray(int byteorder, int num) {
+    Completer<List<int>> completer = new Completer();
     if (num == 0) {
       completer.complete([]);
       return completer.future;
@@ -206,8 +199,8 @@ class EasyParser {
     return completer.future;
   }
 
-  async.Future<int> readInt(int byteorder) {
-    async.Completer<int> completer = new async.Completer();
+  Future<int> readInt(int byteorder) {
+    Completer<int> completer = new Completer();
     buffer.getByteFuture(index, 4).then((List<int> va) {
       if (va.length < 4) {
         completer.completeError(new EasyParseError());
@@ -221,8 +214,8 @@ class EasyParser {
     return completer.future;
   }
 
-  async.Future<int> readLong(int byteorder) {
-    async.Completer<int> completer = new async.Completer();
+  Future<int> readLong(int byteorder) {
+    Completer<int> completer = new Completer();
     buffer.getByteFuture(index, 8).then((List<int> va) {
       if (va.length < 8) {
         completer.completeError(new EasyParseError());
@@ -236,8 +229,8 @@ class EasyParser {
     return completer.future;
   }
 
-  async.Future<int> readByte([int byteorder]) {
-    async.Completer<int> completer = new async.Completer();
+  Future<int> readByte([int byteorder]) {
+    Completer<int> completer = new Completer();
     buffer.getByteFuture(index, 1).then((List<int> va) {
       if (va.length < 1) {
         completer.completeError(new EasyParseError());
