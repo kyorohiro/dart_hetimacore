@@ -1,6 +1,6 @@
 library hetimacore_cl;
-export  'src/data/hetimadata_fs.dart';
-export  'src/data/hetimadata_blob.dart';
-export  'src/data/hetimadata_get.dart';
+export  'core/data/hetimadata_fs.dart';
+export  'core/data/hetimadata_blob.dart';
+export  'core/data/hetimadata_get.dart';
 
 

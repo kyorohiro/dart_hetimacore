@@ -2,16 +2,16 @@ library hetimacore;
 import 'dart:math' as math;
 import 'dart:async' as async;
 import 'dart:core';
-export 'src/data/hetimadata.dart';
-export 'src/parser/hetimareader.dart';
+export 'core/data/hetimadata.dart';
+export 'core/parser/hetimareader.dart';
 
-export 'src/parser/byteorder.dart';
-export 'src/parser/easyparser.dart';
-export 'src/parser/arraybuilder.dart';
-export 'src/parser/arraybuilderbuffer.dart';
-export 'src/util/percentencode.dart';
-export 'src/data/hetimadata_mem.dart';
-export 'src/data/hetimadata_cache.dart';
+export 'core/parser/byteorder.dart';
+export 'core/parser/easyparser.dart';
+export 'core/parser/arraybuilder.dart';
+export 'core/parser/arraybuilderbuffer.dart';
+export 'core/util/percentencode.dart';
+export 'core/data/hetimadata_mem.dart';
+export 'core/data/hetimadata_cache.dart';
 
-part 'src/util/uuid.dart';
-part 'src/test/hetitest.dart';
+part 'core/util/uuid.dart';
+part 'core/test/hetitest.dart';
