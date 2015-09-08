@@ -10,7 +10,7 @@ import '../../hetimacore.dart';
 class HetimaDataDartIO extends HetimaData {
   RandomAccessFile _randomFile = null;
   bool _readOnly = false;
-  HetimaDartDartIO(String path) {
+  HetimaDataDartIO(String path) {
     File _f = new File(path);
     _randomFile = _f.openSync(mode: FileMode.WRITE);
   }
@@ -68,6 +68,6 @@ class HetimaDataDartIO extends HetimaData {
 
 class HetimaDataDartIOBuilder extends HetimaDataBuilder {
   Future<HetimaData> createHetimaData(String path) async {
-    return new HetimaDataDartIO();
+    return new HetimaDataDartIO(path);
   }
 }
