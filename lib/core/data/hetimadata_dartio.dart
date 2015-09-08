@@ -10,9 +10,13 @@ import '../../hetimacore.dart';
 class HetimaDataDartIO extends HetimaData {
   RandomAccessFile _randomFile = null;
   bool _readOnly = false;
-  HetimaDataDartIO(String path) {
+  HetimaDataDartIO(String path,{erace: false}) {
     File _f = new File(path);
-    _randomFile = _f.openSync(mode: FileMode.WRITE);
+    if(erace == true) {
+      _randomFile = _f.openSync(mode: FileMode.WRITE);
+    } else {
+      _randomFile = _f.openSync(mode: FileMode.APPEND);      
+    }
   }
 
   @override
