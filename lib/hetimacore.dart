@@ -13,5 +13,7 @@ export 'core/parser/uint8list_withlength.dart';
 export 'core/util/percentencode.dart';
 export 'core/data/hetimadata_mem.dart';
 export 'core/data/hetimadata_cache.dart';
+export 'core/data/hetimadata_serialize.dart';
+
 part 'core/util/uuid.dart';
 part 'core/test/hetitest.dart';

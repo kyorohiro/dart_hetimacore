@@ -4,12 +4,12 @@ import 'dart:async';
 import 'dart:core';
 import '../../hetimacore.dart';
 
-abstract class HetimaDataSerialize extends HetimaData {
+class HetimaDataSerialize extends HetimaData {
   bool get writable => false;
   bool get readable => false;
   HetimaData _base = null;
 
-  List<HetimaDataSerializeTask> _action = null;
+  List<HetimaDataSerializeTask> _action = [];
   HetimaDataSerialize(HetimaData base) {
     _base = base;
   }
@@ -27,6 +27,7 @@ abstract class HetimaDataSerialize extends HetimaData {
     t.buffer = buffer;
     t.start = start;
     t.c = new Completer();
+    _action.add(t);
     _update();
     return t.c.future;
   }
@@ -37,6 +38,7 @@ abstract class HetimaDataSerialize extends HetimaData {
     t.length = length;
     t.tmp = tmp;
     t.c = new Completer();
+    _action.add(t);
     _update();
     return t.c.future;
   }
