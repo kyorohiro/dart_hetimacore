@@ -40,7 +40,8 @@ class HetimaDataDartIO extends HetimaData {
   @override
   Future<WriteResult> write(Object buffer, int start) async {
     if (_readOnly == false) {
-      await _randomFile.writeFrom(buffer, start);
+      await _randomFile.setPosition(start);
+      await _randomFile.writeFrom(buffer, 0, (buffer as List).length);
     }
     return new WriteResult();
   }
@@ -48,6 +49,10 @@ class HetimaDataDartIO extends HetimaData {
   Future<int> truncate(int fileSize) async {
     await _randomFile.truncate(fileSize);
     return 0;
+  }
+
+  Future close() async {
+    await _randomFile.close();
   }
 
   static Future<List<String>> getFiles(String path) async {
