@@ -62,7 +62,9 @@ class ArrayBuilderBuffer {
     }
 
     int erace = len - _clearedBuffer;
-
+    if(logon) {
+      print("(int erace = len - _clearedBuffer) == ${erace} = ${len} - ${_clearedBuffer})");
+    }
     if (reuse == false) {
       _buffer8 = _buffer8.sublist(erace);
       _length = _buffer8.length;
@@ -71,6 +73,9 @@ class ArrayBuilderBuffer {
         _buffer8[i] = _buffer8[i+erace];
       }
       _length = _length-erace;
+    }
+    if(logon) {
+      print("(_length) == ${erace} = ${_length})");
     }
     _clearedBuffer = len;
   }
