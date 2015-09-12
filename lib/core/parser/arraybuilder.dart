@@ -95,8 +95,8 @@ class ArrayBuilder extends HetimaReader {
     _length = 0;
   }
 
-  void clearInnerBuffer(int len) {
-    _buffer8.clearInnerBuffer(len);
+  void clearInnerBuffer(int len, {reuse: true}) {
+    _buffer8.clearInnerBuffer(len, reuse: reuse);
   }
 
   int size() {
