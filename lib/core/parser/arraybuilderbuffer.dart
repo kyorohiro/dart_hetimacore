@@ -5,16 +5,19 @@ import 'dart:core';
 
 class ArrayBuilderBuffer {
   int _clearedBuffer = 0;
+  int _length = 0;
   List<int> _buffer8 = null;
   List<int> get rawbuffer8 => _buffer8;
 
   int get clearedBuffer => _clearedBuffer;
 
   ArrayBuilderBuffer(int max) {
+    _length = max;
     _buffer8 = new data.Uint8List(max);
   }
 
   ArrayBuilderBuffer.fromList(List<int> buffer) {
+    _length = buffer.length;
     _buffer8 = new data.Uint8List.fromList(buffer);
   }
 
@@ -36,13 +39,13 @@ class ArrayBuilderBuffer {
 
   List<int> sublist(int start, int end) {
     data.Uint8List ret = new data.Uint8List(end - start);
-    for (int j = 0; j < end-start; j++) {
-      ret[j] = this[j+start];
+    for (int j = 0; j < end - start; j++) {
+      ret[j] = this[j + start];
     }
     return ret;
   }
 
-  void clearInnerBuffer(int len) {
+  void clearInnerBuffer(int len, {bool reuse: true}) {
     if (_clearedBuffer >= len) {
       return;
     }
@@ -53,13 +56,22 @@ class ArrayBuilderBuffer {
 
     int erace = len - _clearedBuffer;
 
-    _buffer8 = _buffer8.sublist(erace);
+    if (reuse == false) {
+      _buffer8 = _buffer8.sublist(erace);
+      _length = _buffer8.length;
+    } else {
+      for (int i = 0; i + erace < _length; i++) {
+        _buffer8[i] = _buffer8[i+erace];
+      }
+      _length = _length-erace;
+    }
     _clearedBuffer = len;
   }
 
   void expand(int nextMax) {
     nextMax = nextMax - _clearedBuffer;
     if (_buffer8.length >= nextMax) {
+      _length = nextMax;
       return;
     }
     data.Uint8List next = new data.Uint8List(nextMax);
@@ -68,7 +80,8 @@ class ArrayBuilderBuffer {
     }
     _buffer8 = null;
     _buffer8 = next;
+    _length = _buffer8.length;
   }
 
-  int get length => _buffer8.length + _clearedBuffer;
+  int get length => _length + _clearedBuffer;
 }
