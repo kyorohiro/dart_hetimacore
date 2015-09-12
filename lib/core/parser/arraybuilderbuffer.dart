@@ -47,7 +47,7 @@ class ArrayBuilderBuffer {
       return;
     }
 
-    if (length <= len) {
+    if (length < len) {
       return;
     }
 
