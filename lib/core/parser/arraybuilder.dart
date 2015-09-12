@@ -17,7 +17,9 @@ class ArrayBuilder extends HetimaReader {
 
   int get clearedBuffer => _buffer8.clearedBuffer;
 
-  ArrayBuilder({bufferSize: 1024}) {
+  bool _logon = false;
+  ArrayBuilder({bufferSize: 1024, bool logon:false}) {
+    _logon = logon;
     _max = bufferSize;
     _buffer8 = new ArrayBuilderBuffer(_max); //new data.Uint8List(_max);
   }

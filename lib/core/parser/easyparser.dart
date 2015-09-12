@@ -13,8 +13,11 @@ class EasyParser {
   List<int> stack = new List();
   HetimaReader _buffer = null;
   HetimaReader get buffer => _buffer;
-  EasyParser(HetimaReader builder) {
+  bool _logon = false;
+
+  EasyParser(HetimaReader builder,{bool logon:false}) {
     _buffer = builder;
+    _logon = logon;
   }
 
   EasyParser toClone() {

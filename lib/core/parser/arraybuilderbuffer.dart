@@ -10,15 +10,18 @@ class ArrayBuilderBuffer {
   List<int> get rawbuffer8 => _buffer8;
 
   int get clearedBuffer => _clearedBuffer;
+  bool _logon = false;
 
-  ArrayBuilderBuffer(int max) {
+  ArrayBuilderBuffer(int max, {bool logon:false}) {
     _length = max;
     _buffer8 = new data.Uint8List(max);
+    _logon = logon;
   }
 
-  ArrayBuilderBuffer.fromList(List<int> buffer) {
+  ArrayBuilderBuffer.fromList(List<int> buffer,{bool logon:false}) {
     _length = buffer.length;
     _buffer8 = new data.Uint8List.fromList(buffer);
+    _logon = logon;
   }
 
   int operator [](int index) {
@@ -47,10 +50,16 @@ class ArrayBuilderBuffer {
 
   void clearInnerBuffer(int len, {bool reuse: true}) {
     if (_clearedBuffer >= len) {
+      if(_logon) {
+        print("(_clearedBuffer >= len) == (${_clearedBuffer} >= ${len})");
+      }
       return;
     }
 
     if (length < len) {
+      if(_logon) {
+        print("(length < len) == (${length} < ${len})");
+      }
       return;
     }
 
