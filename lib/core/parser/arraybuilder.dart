@@ -113,7 +113,7 @@ class ArrayBuilder extends HetimaReader {
     if (_length + plusLength < _max) {
       return;
     } else {
-      int nextMax = _length + plusLength + _max;
+      int nextMax = _length + plusLength + (_max-_buffer8.clearedBuffer);
       _buffer8.expand(nextMax);
       _max = nextMax;
     }
