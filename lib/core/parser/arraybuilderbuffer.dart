@@ -81,6 +81,9 @@ class ArrayBuilderBuffer {
   }
 
   void expand(int nextMax) {
+    if(logon) {
+      print("(nextMax - _clearedBuffer) == (${nextMax - _clearedBuffer}=${nextMax} - ${_clearedBuffer};)");
+    }
     nextMax = nextMax - _clearedBuffer;
     if (_buffer8.length >= nextMax) {
       _length = nextMax;
