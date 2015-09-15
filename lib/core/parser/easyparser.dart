@@ -115,7 +115,7 @@ class EasyParser {
     }
     Completer<int> completer = new Completer();
     _buffer.getByteFuture(index, 2, buffer:buffer, output:outLength).then((List<int> va) {
-      if (va.length < 2) {
+      if (outLength[0] < 2) {
         completer.completeError(new EasyParseError());
       } else {
         index += 2;
@@ -127,14 +127,17 @@ class EasyParser {
     return completer.future;
   }
 
-  Future<List<int>> readShortArray(int byteorder, int num, {List<int> buffer:null}) {
+  Future<List<int>> readShortArray(int byteorder, int num, {List<int> buffer:null, List<int> outLength:null}) {
+    if(outLength == null) {
+      outLength = [0];
+    }
     Completer<List<int>> completer = new Completer();
     if (num == 0) {
       completer.complete([]);
       return completer.future;
     }
-    _buffer.getByteFuture(index, 2 * num,buffer:buffer).then((List<int> va) {
-      if (va.length < 2 * num) {
+    _buffer.getByteFuture(index, 2 * num,buffer:buffer, output:outLength).then((List<int> va) {
+      if (outLength[0] < 2 * num) {
         completer.completeError(new EasyParseError());
       } else {
         index += 2 * num;
