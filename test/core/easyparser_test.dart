@@ -168,4 +168,29 @@ void main() {
       unit.expect(out[0], 1);
     }
   });
+  
+  unit.test("nextBuffer", () async {
+    {
+      ArrayBuilder b = new ArrayBuilder();
+      b.appendIntList([1,2,3,4,5,6]);
+      EasyParser parser = new EasyParser(b);
+      List<int> b1 = await parser.nextBuffer(3);
+      unit.expect(b1, [1,2,3]);
+      List<int> b2 = await parser.nextBuffer(3);
+      unit.expect(b2, [4,5,6]);
+    }
+    {
+      List<int> buffer = new List.filled(8, 0);
+      List<int> out = [];
+      ArrayBuilder b = new ArrayBuilder();
+      b.appendIntList([1,2,3,4,5,6]);
+      EasyParser parser = new EasyParser(b);
+      List<int> b1 = await parser.nextBuffer(3,buffer:buffer, outLength:out);
+      unit.expect(b1, [1,2,3,0,0,0,0,0]);
+      unit.expect(out[0], 3);
+      List<int> b2 = await parser.nextBuffer(3,buffer:buffer, outLength:out);
+      unit.expect(b2, [4,5,6,0,0,0,0,0]);
+      unit.expect(out[0], 3);
+    }
+  });
 }
