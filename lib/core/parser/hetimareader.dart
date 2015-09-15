@@ -4,7 +4,7 @@ import 'dart:core';
 
 abstract class HetimaReader {
 
-  async.Future<List<int>> getByteFuture(int index, int length, {List<int> buffer:null}) ;
+  async.Future<List<int>> getByteFuture(int index, int length, {List<int> buffer:null, List<int> output:null}) ;
 
   async.Future<int> getLength();
 
@@ -62,10 +62,10 @@ class HetimaReaderAdapter extends HetimaReader {
   //
   async.Future<bool> get onFin => _base.onFin;
 
-  async.Future<List<int>> getByteFuture(int index, int length, {List<int> buffer:null}) {
+  async.Future<List<int>> getByteFuture(int index, int length, {List<int> buffer:null,List<int> output:null}) {
     async.Completer<List<int>> completer = new async.Completer();
 
-    _base.getByteFuture(index + _startIndex, length).then((List<int> d) {
+    _base.getByteFuture(index + _startIndex, length, buffer:buffer, output:output).then((List<int> d) {
       completer.complete(d);
     }).catchError((e) {
       completer.completeError(e);

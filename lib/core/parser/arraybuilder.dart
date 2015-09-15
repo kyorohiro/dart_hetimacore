@@ -6,7 +6,6 @@ import 'dart:async';
 import 'dart:core';
 import 'hetimareader.dart';
 import 'arraybuilderbuffer.dart';
-import 'uint8list_withlength.dart';
 
 class ArrayBuilder extends HetimaReader {
   int _max = 1024;
@@ -40,15 +39,20 @@ class ArrayBuilder extends HetimaReader {
         length += 1;
       }
 
-      if (info.completerResult is Uint8ListWithLength) {
-        (info.completerResult as Uint8ListWithLength).setCurrentLength(length);
-      } else if (info.completerResult.length > length) {
+      if (info.output == null && info.completerResult.length > length) {
         List<int> k = info.completerResult.sublist(0, length);
         info.completerResult = k;
       }
       info.completer.complete(info.completerResult);
       info.completerResult = null;
       info.completerResultLength = 0;
+      if(info.output != null) {
+        if(info.output.length < 1) {
+          info.output.add(length);
+        } else {
+          info.output[0] = length;
+        }
+      }
       return true;
     } else {
       return false;
@@ -67,13 +71,14 @@ class ArrayBuilder extends HetimaReader {
     }
   }
 
-  Future<List<int>> getByteFuture(int index, int length, {List<int> buffer: null}) {
+  Future<List<int>> getByteFuture(int index, int length, {List<int> buffer: null, List<int> output:null}) {
     GetByteFutureInfo info = new GetByteFutureInfo();
     if (buffer == null) {
       info.completerResult = new data.Uint8List(length);
     } else {
       info.completerResult = buffer;
     }
+    info.output = output;
     if (info.completerResult.length < length) {
       throw {};
     }
@@ -165,5 +170,6 @@ class GetByteFutureInfo {
   List<int> completerResult = new List();
   int completerResultLength = 0;
   int index = 0;
+  List<int> output = null;
   Completer<List<int>> completer = null;
 }

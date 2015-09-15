@@ -9,7 +9,6 @@ export 'core/parser/byteorder.dart';
 export 'core/parser/easyparser.dart';
 export 'core/parser/arraybuilder.dart';
 export 'core/parser/arraybuilderbuffer.dart';
-export 'core/parser/uint8list_withlength.dart';
 export 'core/util/percentencode.dart';
 export 'core/data/hetimadata_mem.dart';
 export 'core/data/hetimadata_cache.dart';

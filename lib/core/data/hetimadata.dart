@@ -83,10 +83,18 @@ class HetimaDataToReader extends HetimaReader {
   }
 
   @override
-  async.Future<List<int>> getByteFuture(int index, int length, {List<int> buffer: null}) {
+  async.Future<List<int>> getByteFuture(int index, int length, {List<int> buffer: null,List<int> output:null}) {
     async.Completer<List<int>> c = new async.Completer();
     mFile.read(index, length).then((ReadResult r) {
-      c.complete(r.buffer.toList());
+      List<int> b = r.buffer.toList();
+      if(output != null) {
+        if(output.length < 1) {
+          output.add(b.length);
+        } else {
+          output[0] = b.length;
+        }
+      }
+      c.complete(b);
     }).catchError((e) {
       c.completeError(e);
     });
