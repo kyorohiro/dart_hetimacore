@@ -63,4 +63,23 @@ void main() {
       unit.expect(out[0], 4);
     }
   });
+  unit.test("readShort", () async {
+    {
+      ArrayBuilder b = new ArrayBuilder();
+      b.appendIntList(ByteOrder.parseShortByte(10, ByteOrder.BYTEORDER_BIG_ENDIAN));
+      EasyParser parser = new EasyParser(b);
+      int bb = await parser.readShort(ByteOrder.BYTEORDER_BIG_ENDIAN);
+      unit.expect(bb, 10);
+    }
+    {
+      ArrayBuilder b = new ArrayBuilder();
+      List<int> buffer = new List.filled(4, 0);
+      List<int> out = [];
+      b.appendIntList(ByteOrder.parseShortByte(10, ByteOrder.BYTEORDER_BIG_ENDIAN));
+      EasyParser parser = new EasyParser(b);
+      int bb = await parser.readShort(ByteOrder.BYTEORDER_BIG_ENDIAN, buffer:buffer, outLength: out);
+      unit.expect(bb, 10);
+      unit.expect(out[0], 2);
+    }
+  });
 }

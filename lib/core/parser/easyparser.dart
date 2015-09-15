@@ -109,9 +109,12 @@ class EasyParser {
     return completer.future;
   }
 
-  Future<int> readShort(int byteorder, {List<int> buffer:null}) {
+  Future<int> readShort(int byteorder, {List<int> buffer:null, List<int> outLength:null}) {
+    if(outLength == null) {
+      outLength = [0];
+    }
     Completer<int> completer = new Completer();
-    _buffer.getByteFuture(index, 2, buffer:buffer).then((List<int> va) {
+    _buffer.getByteFuture(index, 2, buffer:buffer, output:outLength).then((List<int> va) {
       if (va.length < 2) {
         completer.completeError(new EasyParseError());
       } else {
