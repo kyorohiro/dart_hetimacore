@@ -61,7 +61,11 @@ class EasyParser {
 
   Future<List<int>> nextBuffer(int length, {List<int> buffer: null, List<int> outLength:null}) async {
     List<int> v = await _buffer.getByteFuture(index, length, buffer: buffer, output:outLength);
-    index += v.length;
+    if(outLength == null) {
+      index += v.length;
+    } else {
+      index +=outLength[0];
+    }
     return v;
   }
 
