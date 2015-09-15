@@ -59,17 +59,21 @@ class EasyParser {
     return _buffer.getByteFuture(index, length);
   }
 
-  Future<List<int>> nextBuffer(int length, {List<int> buffer: null}) async {
-    List<int> v = await _buffer.getByteFuture(index, length, buffer: buffer);
+  Future<List<int>> nextBuffer(int length, {List<int> buffer: null, List<int> outLength:null}) async {
+    List<int> v = await _buffer.getByteFuture(index, length, buffer: buffer, output:outLength);
     index += v.length;
     return v;
   }
 
-  Future<String> nextString(String value, {List<int> buffer:null}) {
+  Future<String> nextString(String value, {List<int> buffer:null, List<int> outLength:null}) {
+    if(outLength == null) {
+      outLength = [0];
+    }
     Completer completer = new Completer();
     List<int> encoded = convert.UTF8.encode(value);
-    _buffer.getByteFuture(index, encoded.length, buffer:buffer).then((List<int> v) {
-      if (v.length != encoded.length) {
+
+    _buffer.getByteFuture(index, encoded.length, buffer:buffer, output:outLength).then((List<int> v) {
+      if (outLength[0] != encoded.length) {
         completer.completeError(new EasyParseError());
         return;
       }
@@ -87,73 +91,13 @@ class EasyParser {
     return completer.future;
   }
 
-  Future<int> nextBytePattern(EasyParserMatcher matcher) {
-    Completer completer = new Completer();
-    matcher.init();
-    _buffer.getByteFuture(index, 1).then((List<int> v) {
-      if (v.length < 1) {
-        throw new EasyParseError();
-      }
-      if (matcher.match(v[0])) {
-        index++;
-        completer.complete(v[0]);
-      } else {
-        throw new EasyParseError();
-      }
-    });
-    return completer.future;
-  }
-
-  Future<List<int>> nextBytePatternWithLength(EasyParserMatcher matcher, int length) {
-    Completer completer = new Completer();
-    matcher.init();
-    _buffer.getByteFuture(index, length).then((List<int> va) {
-      if (va.length < length) {
-        completer.completeError(new EasyParseError());
-      }
-      for (int v in va) {
-        bool find = false;
-        find = matcher.match(v);
-        if (find == false) {
-          completer.completeError(new EasyParseError());
-        }
-        index++;
-      }
-      completer.complete(va);
-    });
-    return completer.future;
-  }
-
-  Future<List<int>> nextBytePatternByUnmatch(EasyParserMatcher matcher, [bool keepWhenMatchIsTrue = true]) {
-    Completer completer = new Completer();
-    matcher.init();
-    List<int> ret = new List<int>();
-    Future<Object> p() {
-      return _buffer.getByteFuture(index, 1).then((List<int> va) {
-        if (va.length < 1) {
-          completer.complete(ret);
-        } else if (keepWhenMatchIsTrue == matcher.match(va[0])) {
-          ret.add(va[0]);
-          index++;
-          return p();
-        } else if (_buffer.immutable) {
-          completer.complete(ret);
-        } else {
-          completer.complete(ret);
-        }
-      });
+  Future<String> readSignWithLength(int length, {List<int> buffer:null, List<int> outLength:null}) {
+    if(outLength == null) {
+      outLength = [0];
     }
-    p();
-    return completer.future;
-  }
-
-  //
-  //
-  //
-  Future<String> readSignWithLength(int length, {List<int> buffer:null}) {
     Completer<String> completer = new Completer();
-    _buffer.getByteFuture(index, length, buffer:buffer).then((List<int> va) {
-      if (va.length < length) {
+    _buffer.getByteFuture(index, length, buffer:buffer, output:outLength).then((List<int> va) {
+      if (outLength[0] < length) {
         completer.completeError(new EasyParseError());
       } else {
         index += length;
@@ -245,6 +189,66 @@ class EasyParser {
     }).catchError((e) {
       completer.completeError(e);
     });
+    return completer.future;
+  }
+  
+  Future<int> nextBytePattern(EasyParserMatcher matcher) {
+    Completer completer = new Completer();
+    matcher.init();
+    _buffer.getByteFuture(index, 1).then((List<int> v) {
+      if (v.length < 1) {
+        throw new EasyParseError();
+      }
+      if (matcher.match(v[0])) {
+        index++;
+        completer.complete(v[0]);
+      } else {
+        throw new EasyParseError();
+      }
+    });
+    return completer.future;
+  }
+
+  Future<List<int>> nextBytePatternWithLength(EasyParserMatcher matcher, int length) {
+    Completer completer = new Completer();
+    matcher.init();
+    _buffer.getByteFuture(index, length).then((List<int> va) {
+      if (va.length < length) {
+        completer.completeError(new EasyParseError());
+      }
+      for (int v in va) {
+        bool find = false;
+        find = matcher.match(v);
+        if (find == false) {
+          completer.completeError(new EasyParseError());
+        }
+        index++;
+      }
+      completer.complete(va);
+    });
+    return completer.future;
+  }
+
+  Future<List<int>> nextBytePatternByUnmatch(EasyParserMatcher matcher, [bool keepWhenMatchIsTrue = true]) {
+    Completer completer = new Completer();
+    matcher.init();
+    List<int> ret = new List<int>();
+    Future<Object> p() {
+      return _buffer.getByteFuture(index, 1).then((List<int> va) {
+        if (va.length < 1) {
+          completer.complete(ret);
+        } else if (keepWhenMatchIsTrue == matcher.match(va[0])) {
+          ret.add(va[0]);
+          index++;
+          return p();
+        } else if (_buffer.immutable) {
+          completer.complete(ret);
+        } else {
+          completer.complete(ret);
+        }
+      });
+    }
+    p();
     return completer.future;
   }
 }
