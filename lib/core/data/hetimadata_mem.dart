@@ -3,7 +3,6 @@ library hetimacore.mem;
 import 'dart:async' as async;
 import 'dart:core';
 import 'hetimadata.dart';
-import 'dart:typed_data';
 
 class HetimaDataMemory extends HetimaData {
   bool get writable => true;
