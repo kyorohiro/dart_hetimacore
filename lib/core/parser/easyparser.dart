@@ -153,10 +153,13 @@ class EasyParser {
     return completer.future;
   }
 
-  Future<int> readInt(int byteorder, {List<int> buffer:null}) {
+  Future<int> readInt(int byteorder, {List<int> buffer:null, List<int> outLength:null}) {
+    if(outLength == null) {
+      outLength = [0];
+    }
     Completer<int> completer = new Completer();
-    _buffer.getByteFuture(index, 4, buffer:buffer).then((List<int> va) {
-      if (va.length < 4) {
+    _buffer.getByteFuture(index, 4, buffer:buffer, output:outLength).then((List<int> va) {
+      if (outLength[0] < 4) {
         completer.completeError(new EasyParseError());
       } else {
         index += 4;
@@ -168,10 +171,13 @@ class EasyParser {
     return completer.future;
   }
 
-  Future<int> readLong(int byteorder, {List<int> buffer:null}) {
+  Future<int> readLong(int byteorder, {List<int> buffer:null, List<int> outLength:null}) {
+    if(outLength == null) {
+      outLength = [0];
+    }
     Completer<int> completer = new Completer();
-    _buffer.getByteFuture(index, 8, buffer:buffer).then((List<int> va) {
-      if (va.length < 8) {
+    _buffer.getByteFuture(index, 8, buffer:buffer, output:outLength).then((List<int> va) {
+      if (outLength[0] < 8) {
         completer.completeError(new EasyParseError());
       } else {
         index += 8;
@@ -183,10 +189,13 @@ class EasyParser {
     return completer.future;
   }
 
-  Future<int> readByte({List<int> buffer:null}) {
+  Future<int> readByte({List<int> buffer:null, List<int> outLength:null}) {
+    if(outLength == null) {
+      outLength = [0];
+    }
     Completer<int> completer = new Completer();
-    _buffer.getByteFuture(index, 1, buffer:buffer).then((List<int> va) {
-      if (va.length < 1) {
+    _buffer.getByteFuture(index, 1, buffer:buffer, output:outLength).then((List<int> va) {
+      if (outLength[0] < 1) {
         completer.completeError(new EasyParseError());
       } else {
         index += 1;

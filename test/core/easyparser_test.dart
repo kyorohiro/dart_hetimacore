@@ -108,4 +108,64 @@ void main() {
       unit.expect(out[0], 4);
     }
   });
+  
+  unit.test("readInt", () async {
+    {
+      ArrayBuilder b = new ArrayBuilder();
+      b.appendIntList(ByteOrder.parseIntByte(10, ByteOrder.BYTEORDER_LITTLE_ENDIAN));
+      EasyParser parser = new EasyParser(b);
+      int bb = await parser.readInt(ByteOrder.BYTEORDER_LITTLE_ENDIAN);
+      unit.expect(bb, 10);
+    }
+    {
+      List<int> buffer = new List.filled(4, 0);
+      List<int> out = [];
+      ArrayBuilder b = new ArrayBuilder();
+      b.appendIntList(ByteOrder.parseIntByte(10, ByteOrder.BYTEORDER_LITTLE_ENDIAN));
+      EasyParser parser = new EasyParser(b);
+      int bb = await parser.readInt(ByteOrder.BYTEORDER_LITTLE_ENDIAN, buffer:buffer, outLength: out);
+      unit.expect(bb, 10);
+      unit.expect(out[0], 4);
+    }
+  });
+
+  unit.test("readLong", () async {
+    {
+      ArrayBuilder b = new ArrayBuilder();
+      b.appendIntList(ByteOrder.parseLongByte(10, ByteOrder.BYTEORDER_LITTLE_ENDIAN));
+      EasyParser parser = new EasyParser(b);
+      int bb = await parser.readLong(ByteOrder.BYTEORDER_LITTLE_ENDIAN);
+      unit.expect(bb, 10);
+    }
+    {
+      List<int> buffer = new List.filled(8, 0);
+      List<int> out = [];
+      ArrayBuilder b = new ArrayBuilder();
+      b.appendIntList(ByteOrder.parseLongByte(10, ByteOrder.BYTEORDER_LITTLE_ENDIAN));
+      EasyParser parser = new EasyParser(b);
+      int bb = await parser.readLong(ByteOrder.BYTEORDER_LITTLE_ENDIAN, buffer:buffer, outLength: out);
+      unit.expect(bb, 10);
+      unit.expect(out[0], 8);
+    }
+  });
+
+  unit.test("readByte", () async {
+    {
+      ArrayBuilder b = new ArrayBuilder();
+      b.appendByte(10);
+      EasyParser parser = new EasyParser(b);
+      int bb = await parser.readByte();
+      unit.expect(bb, 10);
+    }
+    {
+      List<int> buffer = new List.filled(8, 0);
+      List<int> out = [];
+      ArrayBuilder b = new ArrayBuilder();
+      b.appendByte(20);
+      EasyParser parser = new EasyParser(b);
+      int bb = await parser.readByte(buffer:buffer, outLength: out);
+      unit.expect(bb, 20);
+      unit.expect(out[0], 1);
+    }
+  });
 }
