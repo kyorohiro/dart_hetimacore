@@ -75,17 +75,14 @@ class HetimaDataFS extends HetimaData {
       writer.abort();
     });
     int len = await getLength();
-    if(length != null && length < len) {
-      len = length;
-    }
     if (len < start) {
       data.Uint8List dummy = null;
       dummy = new data.Uint8List.fromList(new List.filled(start - len, 0));
       writer.seek(len);
-      writer.write(new html.Blob([dummy, buffer]));
+      writer.write(new html.Blob([dummy, buffer]).slice(0, length+dummy.length));
     } else {
       writer.seek(start);
-      writer.write(new html.Blob([buffer]));
+      writer.write(new html.Blob([buffer]).slice(0, length));
     }
 
     return completer.future;
