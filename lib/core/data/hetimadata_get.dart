@@ -16,7 +16,7 @@ class HetimaDataGet extends HetimaData {
     _mPath = path;
   }
 
-  async.Future<WriteResult> write(Object buffer, int start) {
+  async.Future<WriteResult> write(Object buffer, int start, [int length=null]) {
     return new async.Completer<WriteResult>().future;
   }
 

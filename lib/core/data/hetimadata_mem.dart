@@ -35,14 +35,17 @@ class HetimaDataMemory extends HetimaData {
     return comp.future;
   }
 
-  async.Future<WriteResult> write(Object buffer, int start) {
+  async.Future<WriteResult> write(Object buffer, int start, [int length=null]) {
     async.Completer<WriteResult> comp = new async.Completer();
     if (buffer is List<int>) {
       if (_dataBuffer.length < start) {
         _dataBuffer.addAll(new List.filled(start - _dataBuffer.length, 0));
       }
 
-      for (int i = 0; i < buffer.length; i++) {
+      if (length == null) {
+        length = buffer.length;
+      }
+      for (int i = 0; i < length; i++) {
         if (start + i < _dataBuffer.length) {
           _dataBuffer[start + i] = buffer[i];
         } else {

@@ -58,7 +58,7 @@ class HetimaDataFS extends HetimaData {
     return f.size;
   }
 
-  Future<WriteResult> write(Object buffer, int start) async {
+  Future<WriteResult> write(Object buffer, int start, [int length=null]) async {
     if (buffer is List<int> && !(buffer is data.Uint8List)) {
       buffer = new data.Uint8List.fromList(buffer);
     }
@@ -75,6 +75,9 @@ class HetimaDataFS extends HetimaData {
       writer.abort();
     });
     int len = await getLength();
+    if(length != null && length < len) {
+      len = length;
+    }
     if (len < start) {
       data.Uint8List dummy = null;
       dummy = new data.Uint8List.fromList(new List.filled(start - len, 0));

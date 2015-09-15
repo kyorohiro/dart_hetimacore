@@ -13,13 +13,13 @@ abstract class HetimaData extends HetimaFileReader {
   bool get writable => false;
   bool get readable => false;
   async.Future<int> getLength();
-  async.Future<WriteResult> write(Object buffer, int start);
+  async.Future<WriteResult> write(Object buffer, int start,[int length=null]);
   async.Future<ReadResult> read(int offset, int length, {List<int> tmp: null});
   void beToReadOnly();
 }
 
 abstract class HetimaFileWriter {
-  async.Future<WriteResult> write(Object o, int start);
+  async.Future<WriteResult> write(Object o, int start,[int length=null]);
 }
 
 abstract class HetimaFileReader {
@@ -65,7 +65,7 @@ class HetimaReaderToData extends HetimaData {
   }
 
   @override
-  async.Future<WriteResult> write(Object buffer, int start) {
+  async.Future<WriteResult> write(Object buffer, int start,[int length=null]) {
     // todo
     return null;
   }

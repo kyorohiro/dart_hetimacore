@@ -24,8 +24,8 @@ class HetimaDataBlob extends HetimaData {
     return ret.future;
   }
 
-  async.Future<WriteResult> write(Object o, int start) {
-    return _mWriter.write(o, start);
+  async.Future<WriteResult> write(Object o, int start,[int length=null]) {
+    return _mWriter.write(o, start, length);
   }
 
 

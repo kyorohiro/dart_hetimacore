@@ -38,10 +38,13 @@ class HetimaDataDartIO extends HetimaData {
   }
 
   @override
-  Future<WriteResult> write(Object buffer, int start) async {
+  Future<WriteResult> write(Object buffer, int start, [int length=null]) async {
     if (_readOnly == false) {
+      if(length == null) {
+        length = (buffer as List).length;
+      }
       await _randomFile.setPosition(start);
-      await _randomFile.writeFrom(buffer, 0, (buffer as List).length);
+      await _randomFile.writeFrom(buffer, 0, length);
     }
     return new WriteResult();
   }

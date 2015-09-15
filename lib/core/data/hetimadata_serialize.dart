@@ -22,10 +22,11 @@ class HetimaDataSerialize extends HetimaData {
     return t.c.future;
   }
 
-  Future<WriteResult> write(Object buffer, int start) {
+  Future<WriteResult> write(Object buffer, int start, [int length=null]) {
     HetimaDataSerializeTaskWrite t = new HetimaDataSerializeTaskWrite();
     t.buffer = buffer;
     t.start = start;
+    t.length = length;
     t.c = new Completer();
     _action.add(t);
     _update();
@@ -62,7 +63,7 @@ class HetimaDataSerialize extends HetimaData {
         ReadResult r = await _base.read(t.offset, t.length);
         t.c.complete(r);
       } else if (t is HetimaDataSerializeTaskWrite) {
-        WriteResult w = await _base.write(t.buffer, t.start);
+        WriteResult w = await _base.write(t.buffer, t.start, t.length);
         t.c.complete(w);
       }
     }
@@ -79,6 +80,7 @@ class HetimaDataSerializeTaskWrite implements HetimaDataSerializeTask {
   int id = 0;
   Object buffer;
   int start;
+  int length;
   Completer c;
 }
 

@@ -104,7 +104,7 @@ class HetimaDataCache extends HetimaData {
     return com.future;
   }
 
-  async.Future<WriteResult> write(List<int> buffer, int offset) {
+  async.Future<WriteResult> write(List<int> buffer, int offset,[int length=null]) {
     async.Completer<WriteResult> com = new async.Completer();
 
     // add 0
@@ -114,7 +114,9 @@ class HetimaDataCache extends HetimaData {
       buffer.insertAll(0, zero);
     }
 
-    int length = buffer.length;
+    if(length == null) {
+     length = buffer.length;
+    }
     int n = 0;
     List<async.Future> act = [];
 
@@ -232,7 +234,7 @@ class HetimaDataCache extends HetimaData {
     }
     return info.dataBuffer.getLength().then((int len) {
       return info.dataBuffer.read(0, len).then((ReadResult r) {
-        return _cashData.write(r.buffer, info.index).then((WriteResult r) {
+        return _cashData.write(r.buffer, info.index, r.buffer.length).then((WriteResult r) {
           if (_gomiInfoList.length == 0 && info != null) {
             info._isWrite = false;
             _gomiInfoList.add(info);
